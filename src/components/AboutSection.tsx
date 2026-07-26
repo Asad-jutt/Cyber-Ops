@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ShieldCheck, Shield, Lock, ShieldAlert, Activity } from 'lucide-react';
 import { sound } from '../utils/audio';
-import { ScrambleText } from './ScrambleText';
 import { LiquidCard } from './LiquidCard';
 
 // Interactive Active Background Grid Canvas (Visible when card is activated)
@@ -140,7 +139,7 @@ function InteractivePillarCard({
           <h3 className={`text-lg font-bold font-sans tracking-wider uppercase transition-colors ${
             isActive ? 'text-emerald-300 drop-shadow-[0_0_10px_rgba(16,185,129,0.5)]' : isHovered ? 'text-cyan-300' : 'text-white'
           }`}>
-            <ScrambleText text={title} />
+            {title}
           </h3>
 
           <p className="text-xs font-mono text-slate-300 leading-relaxed">
@@ -233,7 +232,7 @@ export function AboutSection() {
           <span>PHILOSOPHY // ZERO-TRUST MANIFESTO</span>
         </div>
         <h2 className="text-4xl md:text-6xl font-black tracking-wider text-white uppercase font-sans max-w-4xl leading-tight">
-          <ScrambleText text="IMPERVIOUS DEFENSE THROUGH ZERO-TRUST & POST-QUANTUM INTELLIGENCE" />
+          IMPERVIOUS DEFENSE THROUGH ZERO-TRUST & POST-QUANTUM INTELLIGENCE
         </h2>
       </div>
 

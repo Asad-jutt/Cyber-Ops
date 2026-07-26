@@ -2,7 +2,6 @@ import React from 'react';
 import { Sliders, RefreshCw, Cpu, Zap, Eye, Box, Shield, Lock } from 'lucide-react';
 import { LabSettings } from '../types';
 import { sound } from '../utils/audio';
-import { ScrambleText } from './ScrambleText';
 import { LiquidCard } from './LiquidCard';
 
 interface LabSectionProps {
@@ -92,7 +91,7 @@ export function LabSection({ labSettings, onUpdateSettings }: LabSectionProps) {
             <span>WAR ROOM // THREAT VECTOR & ENCRYPTION SIMULATOR</span>
           </div>
           <h2 className="text-4xl md:text-6xl font-black tracking-wider text-white uppercase font-sans">
-            <ScrambleText text="WAR ROOM SIMULATOR" />
+            WAR ROOM SIMULATOR
           </h2>
         </div>
 

@@ -28,7 +28,6 @@ import {
   appendAuditRowToSheet,
   GoogleSpreadsheetInfo
 } from '../utils/googleSheets';
-import { ScrambleText } from './ScrambleText';
 import { LiquidCard } from './LiquidCard';
 
 const STORAGE_KEY_SHEET_ID = 'cyber_ops_sheet_id';
@@ -285,9 +284,9 @@ export function ContactSection() {
           </div>
 
           <h2 className="text-4xl md:text-6xl font-black tracking-wider text-white uppercase font-sans leading-tight">
-            <ScrambleText text="INITIATE" /> <br />
+            INITIATE <br />
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-400">
-              <ScrambleText text="CYBER AUDIT" />
+              CYBER AUDIT
             </span>
           </h2>
 
@@ -320,7 +319,7 @@ export function ContactSection() {
                   <CheckCircle2 className="w-8 h-8" />
                 </div>
                 <h3 className="text-2xl font-bold font-sans tracking-wider uppercase text-white">
-                  <ScrambleText text="ENCRYPTED DISPATCH RECEIVED" />
+                  ENCRYPTED DISPATCH RECEIVED
                 </h3>
 
                 <p className="text-slate-300 text-xs max-w-xs mx-auto leading-relaxed">

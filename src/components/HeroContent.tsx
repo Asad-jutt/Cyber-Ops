@@ -2,7 +2,6 @@ import React, { useEffect, useRef } from 'react';
 import { ArrowUpRight, ShieldCheck, Cpu, Lock, ShieldAlert } from 'lucide-react';
 import gsap from 'gsap';
 import { sound } from '../utils/audio';
-import { ScrambleText } from './ScrambleText';
 import { LiquidCard } from './LiquidCard';
 
 interface HeroContentProps {
@@ -72,14 +71,14 @@ export function HeroContent({ onBeginExploration, onOpenLab }: HeroContentProps)
         </span>
       </div>
 
-      {/* Main Hero Headline with Scramble Effect (Heading only) */}
+      {/* Main Hero Headline (Heading only) */}
       <h1
         ref={titleRef}
         className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight text-white uppercase leading-[0.95] mb-6 drop-shadow-[0_0_35px_rgba(0,240,255,0.2)] font-sans"
       >
-        <ScrambleText text="CYBER OPS" /> <br />
+        CYBER OPS <br />
         <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-sky-200 to-purple-500 animate-gradient">
-          <ScrambleText text="CYBER DEFENSE" />
+          CYBER DEFENSE
         </span>
       </h1>
 

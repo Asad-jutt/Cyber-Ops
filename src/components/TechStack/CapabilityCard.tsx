@@ -3,6 +3,7 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { Float } from '@react-three/drei';
 import * as THREE from 'three';
 import { sound } from '../../utils/audio';
+import { LiquidCard } from '../LiquidCard';
 
 export type CardVariant = 'webgl' | 'dataviz' | 'react' | 'shaders';
 
@@ -194,50 +195,71 @@ export function CapabilityCard({
     }
   };
 
+  const getShaderColors = (v: CardVariant) => {
+    switch (v) {
+      case 'webgl':
+        return { color1: '#00f0ff', color2: '#3b82f6' };
+      case 'dataviz':
+        return { color1: '#10b981', color2: '#00f0ff' };
+      case 'react':
+        return { color1: '#00f0ff', color2: '#a855f7' };
+      case 'shaders':
+        return { color1: '#d946ef', color2: '#00f0ff' };
+    }
+  };
+
+  const { color1, color2 } = getShaderColors(variant);
+
   return (
-    <div
+    <LiquidCard
+      color1={color1}
+      color2={color2}
       onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      className={`relative p-6 sm:p-8 rounded-2xl transition-all duration-500 backdrop-blur-xl border flex flex-col justify-between group cursor-pointer ${
+      className={`rounded-2xl transition-all duration-500 border flex flex-col justify-between group cursor-pointer h-full ${
         isHovered
-          ? 'bg-black/75 border-cyan-400 shadow-[0_0_30px_rgba(0,240,255,0.35)] translate-y-[-4px]'
+          ? 'bg-black/80 border-cyan-400 shadow-[0_0_30px_rgba(0,240,255,0.35)] translate-y-[-4px]'
           : 'bg-black/50 border-white/10 hover:border-cyan-500/40'
       }`}
-      data-cursor-hover
-      data-cursor-text="INSPECT"
     >
-      {/* Top Bar: Icon + Badge */}
-      <div className="flex items-start justify-between mb-6">
-        {renderIcon()}
-        {badge && (
-          <span className="px-2.5 py-1 rounded-full bg-cyan-500/10 border border-cyan-400/30 text-[10px] font-mono text-cyan-300 tracking-widest uppercase">
-            {badge}
-          </span>
-        )}
-      </div>
-
-      {/* Card Body */}
-      <div>
-        <h3
-          className={`text-lg sm:text-xl font-bold font-sans tracking-wide uppercase transition-colors mb-2 ${
-            isHovered ? 'text-cyan-300 drop-shadow-[0_0_10px_rgba(0,240,255,0.5)]' : 'text-white'
-          }`}
-        >
-          {title}
-        </h3>
-        <p className="text-xs sm:text-sm font-mono text-slate-300 leading-relaxed">
-          {description}
-        </p>
-      </div>
-
-      {/* Hover Indicator Border Gradient Line */}
       <div
-        className={`absolute bottom-0 left-6 right-6 h-[2px] rounded-full transition-all duration-500 ${
-          isHovered
-            ? 'bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-100'
-            : 'opacity-0'
-        }`}
-      />
-    </div>
+        onMouseLeave={handleMouseLeave}
+        className="relative z-10 p-6 sm:p-8 flex flex-col justify-between h-full"
+        data-cursor-hover
+        data-cursor-text="INSPECT"
+      >
+        {/* Top Bar: Icon + Badge */}
+        <div className="flex items-start justify-between mb-6">
+          {renderIcon()}
+          {badge && (
+            <span className="px-2.5 py-1 rounded-full bg-cyan-500/10 border border-cyan-400/30 text-[10px] font-mono text-cyan-300 tracking-widest uppercase">
+              {badge}
+            </span>
+          )}
+        </div>
+
+        {/* Card Body */}
+        <div>
+          <h3
+            className={`text-lg sm:text-xl font-bold font-sans tracking-wide uppercase transition-colors mb-2 ${
+              isHovered ? 'text-cyan-300 drop-shadow-[0_0_10px_rgba(0,240,255,0.5)]' : 'text-white'
+            }`}
+          >
+            {title}
+          </h3>
+          <p className="text-xs sm:text-sm font-mono text-slate-300 leading-relaxed">
+            {description}
+          </p>
+        </div>
+
+        {/* Hover Indicator Border Gradient Line */}
+        <div
+          className={`absolute bottom-0 left-6 right-6 h-[2px] rounded-full transition-all duration-500 ${
+            isHovered
+              ? 'bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-100'
+              : 'opacity-0'
+          }`}
+        />
+      </div>
+    </LiquidCard>
   );
 }

@@ -3,7 +3,6 @@ import { ArrowUpRight, ShieldCheck, ExternalLink, X } from 'lucide-react';
 import { Project } from '../types';
 import { PROJECTS } from '../data/projects';
 import { sound } from '../utils/audio';
-import { ScrambleText } from './ScrambleText';
 import { LiquidCard } from './LiquidCard';
 
 interface WorksSectionProps {
@@ -53,7 +52,7 @@ export function WorksSection({ onOpenLiveDemo }: WorksSectionProps) {
             <span>CASE STUDIES // RECENT ENGAGEMENTS</span>
           </div>
           <h2 className="text-4xl md:text-6xl font-black tracking-wider text-white uppercase font-sans">
-            <ScrambleText text="CYBER DEFENSE ARCHIVE" />
+            CYBER DEFENSE ARCHIVE
           </h2>
         </div>
 
@@ -115,7 +114,7 @@ export function WorksSection({ onOpenLiveDemo }: WorksSectionProps) {
               <div className="p-6">
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="text-xl md:text-2xl font-bold font-sans text-white group-hover:text-cyan-300 transition-colors tracking-wider">
-                    <ScrambleText text={project.title} />
+                    {project.title}
                   </h3>
                   <span className="text-xs font-mono text-slate-500">{project.year}</span>
                 </div>
@@ -168,7 +167,7 @@ export function WorksSection({ onOpenLiveDemo }: WorksSectionProps) {
                   {selectedProject.category}
                 </span>
                 <h3 className="text-3xl md:text-4xl font-black font-sans uppercase text-white">
-                  <ScrambleText text={selectedProject.title} />
+                  {selectedProject.title}
                 </h3>
               </div>
             </div>
