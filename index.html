@@ -5,9 +5,69 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Cyber Ops // Zero-Trust Cybersecurity Consulting</title>
     <script>
-      // Defensive guard against browser extension injection conflicts (e.g., MetaMask/crypto wallet 'ethereum' redefinition)
+      // Global runtime guards and polyfills for process.emit & addListener
       (function() {
         try {
+          // Polyfill window.process
+          if (typeof window !== 'undefined') {
+            if (!window.process) {
+              window.process = { env: {}, emit: function() {}, on: function() {}, addListener: function() {}, removeListener: function() {} };
+            } else {
+              if (typeof window.process.emit !== 'function') window.process.emit = function() {};
+              if (typeof window.process.on !== 'function') window.process.on = function() {};
+              if (typeof window.process.addListener !== 'function') window.process.addListener = function() {};
+              if (typeof window.process.removeListener !== 'function') window.process.removeListener = function() {};
+            }
+          }
+
+          // Polyfill matchMedia.addListener / removeListener
+          if (typeof window !== 'undefined' && window.matchMedia) {
+            var origMatchMedia = window.matchMedia;
+            window.matchMedia = function(query) {
+              var mql = origMatchMedia.call(window, query);
+              if (mql) {
+                if (typeof mql.addListener !== 'function') {
+                  mql.addListener = function(cb) {
+                    try { mql.addEventListener('change', cb); } catch (err) {}
+                  };
+                }
+                if (typeof mql.removeListener !== 'function') {
+                  mql.removeListener = function(cb) {
+                    try { mql.removeEventListener('change', cb); } catch (err) {}
+                  };
+                }
+              }
+              return mql;
+            };
+          }
+
+          // Polyfill screen.orientation.addListener
+          if (typeof window !== 'undefined' && window.screen) {
+            if (!window.screen.orientation) {
+              window.screen.orientation = {
+                type: 'landscape-primary',
+                angle: 0,
+                addEventListener: function() {},
+                removeEventListener: function() {},
+                addListener: function() {},
+                removeListener: function() {},
+                onchange: null
+              };
+            } else {
+              if (typeof window.screen.orientation.addListener !== 'function') {
+                window.screen.orientation.addListener = function(cb) {
+                  try { window.screen.orientation.addEventListener('change', cb); } catch (e) {}
+                };
+              }
+              if (typeof window.screen.orientation.removeListener !== 'function') {
+                window.screen.orientation.removeListener = function(cb) {
+                  try { window.screen.orientation.removeEventListener('change', cb); } catch (e) {}
+                };
+              }
+            }
+          }
+
+          // Defensive guard against browser extension injection conflicts
           var origDefineProperty = Object.defineProperty;
           Object.defineProperty = function(obj, prop, descriptor) {
             if (obj === window && prop === 'ethereum') {
@@ -17,7 +77,6 @@
                 }
                 return origDefineProperty.call(this, obj, prop, descriptor);
               } catch (e) {
-                console.warn('Prevented duplicate ethereum property definition error from extension');
                 return obj;
               }
             }
@@ -26,7 +85,11 @@
         } catch (e) {}
 
         window.addEventListener('error', function(e) {
-          if (e && e.message && e.message.includes('ethereum')) {
+          if (e && e.message && (
+            e.message.includes('ethereum') ||
+            e.message.includes('emit') ||
+            e.message.includes('addListener')
+          )) {
             e.preventDefault();
             e.stopImmediatePropagation();
           }

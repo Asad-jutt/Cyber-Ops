@@ -93,6 +93,33 @@ export function LiquidShaderCanvas({
   const containerRef = useRef<HTMLDivElement>(null);
   const [hasContextError, setHasContextError] = useState(false);
 
+  const isHoveredRef = useRef(isHovered);
+  const mousePosRef = useRef(mousePos);
+  const color1Ref = useRef(color1);
+  const color2Ref = useRef(color2);
+  const uniformsRef = useRef<any>(null);
+
+  useEffect(() => {
+    isHoveredRef.current = isHovered;
+  }, [isHovered]);
+
+  useEffect(() => {
+    mousePosRef.current = mousePos;
+  }, [mousePos.x, mousePos.y]);
+
+  useEffect(() => {
+    color1Ref.current = color1;
+    color2Ref.current = color2;
+    if (uniformsRef.current) {
+      try {
+        uniformsRef.current.uColor1.value.set(color1);
+        uniformsRef.current.uColor2.value.set(color2);
+      } catch {
+        // Ignore color update error
+      }
+    }
+  }, [color1, color2]);
+
   useEffect(() => {
     const container = containerRef.current;
     if (!container || hasContextError) return;
@@ -106,14 +133,14 @@ export function LiquidShaderCanvas({
 
       renderer = new THREE.WebGLRenderer({
         alpha: true,
-        antialias: true,
-        powerPreference: 'default'
+        antialias: false,
+        powerPreference: 'low-power'
       });
 
       const width = container.clientWidth || 300;
       const height = container.clientHeight || 200;
       renderer.setSize(width, height);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
 
       // Handle context lost
       const handleContextLost = (e: Event) => {
@@ -129,9 +156,10 @@ export function LiquidShaderCanvas({
         uHover: { value: 0 },
         uMouse: { value: new THREE.Vector2(0.5, 0.5) },
         uResolution: { value: new THREE.Vector2(width, height) },
-        uColor1: { value: new THREE.Color(color1) },
-        uColor2: { value: new THREE.Color(color2) }
+        uColor1: { value: new THREE.Color(color1Ref.current) },
+        uColor2: { value: new THREE.Color(color2Ref.current) }
       };
+      uniformsRef.current = uniforms;
 
       const material = new THREE.ShaderMaterial({
         vertexShader,
@@ -145,21 +173,19 @@ export function LiquidShaderCanvas({
       const mesh = new THREE.Mesh(geometry, material);
       scene.add(mesh);
 
-      let targetHover = isHovered ? 1.0 : 0.0;
       let currentHover = 0.0;
-
       const clock = new THREE.Clock();
 
       const animate = () => {
         animId = requestAnimationFrame(animate);
         const elapsedTime = clock.getElapsedTime();
 
-        targetHover = isHovered ? 1.0 : 0.0;
+        const targetHover = isHoveredRef.current ? 1.0 : 0.0;
         currentHover += (targetHover - currentHover) * 0.1;
 
         uniforms.uTime.value = elapsedTime;
         uniforms.uHover.value = currentHover;
-        uniforms.uMouse.value.set(mousePos.x, 1.0 - mousePos.y); // Flip Y for WebGL UV
+        uniforms.uMouse.value.set(mousePosRef.current.x, 1.0 - mousePosRef.current.y);
 
         if (renderer) {
           renderer.render(scene, camera);
@@ -195,7 +221,7 @@ export function LiquidShaderCanvas({
       console.warn('WebGL Liquid Shader creation error:', e);
       setHasContextError(true);
     }
-  }, [hasContextError, isHovered, mousePos.x, mousePos.y, color1, color2]);
+  }, [hasContextError]);
 
   if (hasContextError) {
     return (

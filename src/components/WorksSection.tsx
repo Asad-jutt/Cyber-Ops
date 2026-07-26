@@ -4,23 +4,46 @@ import { Project } from '../types';
 import { PROJECTS } from '../data/projects';
 import { sound } from '../utils/audio';
 import { LiquidCard } from './LiquidCard';
+import { SanityWorksBlock } from '../sanity/client';
+import { urlFor } from '../sanity/image';
 
 interface WorksSectionProps {
+  data?: SanityWorksBlock;
   onOpenLiveDemo?: (projectTitle: string) => void;
 }
 
-export function WorksSection({ onOpenLiveDemo }: WorksSectionProps) {
+export function WorksSection({ data, onOpenLiveDemo }: WorksSectionProps) {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>('ALL');
 
+  const badgeText = data?.badgeText || 'CASE STUDIES // RECENT ENGAGEMENTS';
+  const sectionTitle = data?.sectionTitle || 'CYBER DEFENSE ARCHIVE';
+
+  const sanityProjects: Project[] = data?.projects && data.projects.length > 0
+    ? data.projects.map((p, idx) => ({
+        id: p.id || `proj_${idx}`,
+        title: p.title || 'Enterprise Engagement',
+        category: p.category || 'CRYPTOGRAPHY',
+        description: p.description || '',
+        fullDescription: p.fullDescription || p.description || '',
+        image: p.imageUrl ? urlFor(p.imageUrl) : p.mainImage ? urlFor(p.mainImage) : PROJECTS[idx % PROJECTS.length].image,
+        tags: p.tags || ['Cybersecurity', 'Zero-Trust'],
+        year: p.year || '2026',
+        client: p.client || 'Fortune 500 Entity',
+        role: p.role || 'Principal Security Architect',
+        metrics: p.metrics || [{ label: 'Zero-Days Neutralized', value: '100%' }],
+        color: p.accentColor || '#00f0ff',
+      }))
+    : PROJECTS;
+
   const categories = ['ALL', 'CRYPTOGRAPHY', 'AI SIEM & SOC', 'ZERO-TRUST', 'RED TEAMING'];
 
-  const filteredProjects = PROJECTS.filter((p) => {
+  const filteredProjects = sanityProjects.filter((p) => {
     if (activeCategory === 'ALL') return true;
-    if (activeCategory === 'CRYPTOGRAPHY') return p.tags.includes('Post-Quantum Crypto') || p.tags.includes('HSM Hardening');
-    if (activeCategory === 'AI SIEM & SOC') return p.tags.includes('Autonomous SOC') || p.tags.includes('SIEM & SOAR');
-    if (activeCategory === 'ZERO-TRUST') return p.tags.includes('Zero-Trust (ZTNA)') || p.tags.includes('Microsegmentation');
-    if (activeCategory === 'RED TEAMING') return p.tags.includes('Red Teaming') || p.tags.includes('Zero-Day Discovery');
+    if (activeCategory === 'CRYPTOGRAPHY') return p.tags.includes('Post-Quantum Crypto') || p.tags.includes('HSM Hardening') || p.category.includes('CRYPTO');
+    if (activeCategory === 'AI SIEM & SOC') return p.tags.includes('Autonomous SOC') || p.tags.includes('SIEM & SOAR') || p.category.includes('SOC');
+    if (activeCategory === 'ZERO-TRUST') return p.tags.includes('Zero-Trust (ZTNA)') || p.tags.includes('Microsegmentation') || p.category.includes('ZERO');
+    if (activeCategory === 'RED TEAMING') return p.tags.includes('Red Teaming') || p.tags.includes('Zero-Day Discovery') || p.category.includes('RED');
     return true;
   });
 
@@ -49,10 +72,10 @@ export function WorksSection({ onOpenLiveDemo }: WorksSectionProps) {
         <div>
           <div className="flex items-center gap-2 text-cyan-400 font-mono text-xs tracking-[0.25em] mb-2 uppercase">
             <ShieldCheck className="w-3.5 h-3.5" />
-            <span>CASE STUDIES // RECENT ENGAGEMENTS</span>
+            <span>{badgeText}</span>
           </div>
           <h2 className="text-4xl md:text-6xl font-black tracking-wider text-white uppercase font-sans">
-            CYBER DEFENSE ARCHIVE
+            {sectionTitle}
           </h2>
         </div>
 

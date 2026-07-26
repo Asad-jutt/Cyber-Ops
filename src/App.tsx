@@ -2,15 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { CustomCursor } from './components/CustomCursor';
 import { Navbar } from './components/Navbar';
 import { Hero3DCanvas } from './components/Hero3DCanvas';
-import { HeroContent } from './components/HeroContent';
-import { WorksSection } from './components/WorksSection';
-import { TechStackSection } from './components/TechStack/TechStackSection';
-import { LabSection } from './components/LabSection';
-import { AboutSection } from './components/AboutSection';
-import { ContactSection } from './components/ContactSection';
 import { SearchModal } from './components/SearchModal';
 import { CyberTerminalDrawer } from './components/CyberTerminalDrawer';
-import { Footer } from './components/Footer';
+import { PageBuilder } from './sanity/PageBuilder';
+import { getSanityPageData, DEFAULT_SANITY_PAGE_DATA, SanityPage } from './sanity/client';
 import { LabSettings, NavSection } from './types';
 
 export default function App() {
@@ -19,6 +14,7 @@ export default function App() {
   const [isTerminalOpen, setIsTerminalOpen] = useState<boolean>(false);
   const [terminalCommand, setTerminalCommand] = useState<string>('');
   const [mousePos, setMousePos] = useState({ x: 0.5, y: 0.5 });
+  const [pageData, setPageData] = useState<SanityPage>(DEFAULT_SANITY_PAGE_DATA);
 
   const [labSettings, setLabSettings] = useState<LabSettings>({
     geometry: 'crystalMatrix',
@@ -32,6 +28,17 @@ export default function App() {
     bloomIntensity: 1.2,
     lightIntensity: 2.5
   });
+
+  // Load Sanity GROQ Page Builder Data
+  useEffect(() => {
+    async function loadPage() {
+      const data = await getSanityPageData('home');
+      if (data) {
+        setPageData(data);
+      }
+    }
+    loadPage();
+  }, []);
 
   // Track global normalized mouse position for 3D parallax
   useEffect(() => {
@@ -63,7 +70,7 @@ export default function App() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#0b0f19] text-white selection:bg-cyan-500/30 selection:text-cyan-300 font-sans overflow-hidden">
+    <div className="relative min-h-screen bg-[#0b0f19] text-white selection:bg-cyan-500/30 selection:text-cyan-300 font-sans overflow-x-hidden">
       {/* Fluid Lerped Custom Cursor */}
       <CustomCursor />
 
@@ -75,44 +82,28 @@ export default function App() {
         onOpenTerminal={() => handleOpenTerminalWithCommand('')}
       />
 
-      {/* Hero Container with Split 3D Canvas Background & Content */}
-      <div className="relative w-full min-h-screen flex items-center overflow-hidden">
-        {/* 3D WebGL Canvas Layer */}
-        <div className="absolute inset-0 z-0 opacity-90">
-          <Hero3DCanvas labSettings={labSettings} mousePosition={mousePos} />
-        </div>
-
-        {/* Ambient Dark Gradient Overlays for Readability */}
-        <div className="absolute inset-0 z-[1] bg-gradient-to-r from-[#0b0f19] via-[#0b0f19]/60 to-transparent pointer-events-none" />
-        <div className="absolute bottom-0 inset-x-0 h-40 z-[1] bg-gradient-to-t from-[#0b0f19] to-transparent pointer-events-none" />
-
-        {/* Hero Content Section */}
-        <HeroContent
-          onBeginExploration={() => handleNavigate('work')}
-          onOpenLab={() => handleNavigate('lab')}
-        />
+      {/* 3D WebGL Canvas Layer (Fixed Background for Hero) */}
+      <div className="fixed inset-0 z-0 pointer-events-none opacity-80">
+        <Hero3DCanvas labSettings={labSettings} mousePosition={mousePos} />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0b0f19]/40 via-[#0b0f19]/75 to-[#0b0f19]" />
       </div>
 
-      {/* Main Sections */}
-      <main className="relative z-10 space-y-12">
-        <WorksSection onOpenLiveDemo={(cmd) => handleOpenTerminalWithCommand(cmd)} />
-        <TechStackSection onExploreServices={() => handleNavigate('contact')} />
-        <LabSection
+      {/* Dynamic Page Builder Stream */}
+      <main className="relative z-10 pt-20">
+        <PageBuilder
+          pageData={pageData}
           labSettings={labSettings}
-          onUpdateSettings={(newSettings) => setLabSettings(newSettings)}
+          onUpdateLabSettings={(newSettings) => setLabSettings(newSettings)}
+          onNavigateSection={handleNavigate}
+          onOpenTerminalWithCommand={handleOpenTerminalWithCommand}
         />
-        <AboutSection />
-        <ContactSection />
       </main>
-
-      {/* Footer */}
-      <Footer />
 
       {/* Search Overlay */}
       <SearchModal
         isOpen={isSearchOpen}
         onClose={() => setIsSearchOpen(false)}
-        onSelectProject={(id) => {
+        onSelectProject={() => {
           handleNavigate('work');
         }}
         onNavigateSection={(sec) => handleNavigate(sec as NavSection)}

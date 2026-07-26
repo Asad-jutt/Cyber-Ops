@@ -1,9 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Shield, ArrowUp } from 'lucide-react';
 import { sound } from '../utils/audio';
+import { SanityFooterBlock } from '../sanity/client';
 
-export function Footer() {
+interface FooterProps {
+  data?: SanityFooterBlock;
+}
+
+export function Footer({ data }: FooterProps) {
   const [timeStr, setTimeStr] = useState('');
+
+  const copyrightText = data?.copyrightText || 'CYBER OPS // ZERO-TRUST CYBER ADVISORY © 2026';
 
   useEffect(() => {
     const updateClock = () => {
@@ -30,9 +37,8 @@ export function Footer() {
           </div>
           <div>
             <span className="font-bold text-white tracking-widest uppercase">
-              CYBER OPS // ZERO-TRUST CYBER ADVISORY
+              {copyrightText}
             </span>
-            <span className="text-slate-600 ml-3">© 2026 ALL RIGHTS RESERVED</span>
           </div>
         </div>
 

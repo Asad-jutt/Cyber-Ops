@@ -18,7 +18,8 @@ import {
   Cpu,
   Layers,
   Edit3,
-  Shield
+  Shield,
+  Server
 } from 'lucide-react';
 import { User } from 'firebase/auth';
 import { sound } from '../utils/audio';
@@ -28,16 +29,26 @@ import {
   appendAuditRowToSheet,
   GoogleSpreadsheetInfo
 } from '../utils/googleSheets';
-import { LiquidCard } from './LiquidCard';
+import { SanityContactBlock } from '../sanity/client';
 
 const STORAGE_KEY_SHEET_ID = 'cyber_ops_sheet_id';
 const STORAGE_KEY_PENDING_ENQUIRIES = 'cyber_ops_pending_enquiries';
 
-export function ContactSection() {
+interface ContactSectionProps {
+  data?: SanityContactBlock;
+}
+
+export function ContactSection({ data }: ContactSectionProps) {
+  const badgeText = data?.badgeText || 'INITIATE SECURITY DISCOVERY';
+  const sectionTitle = data?.sectionTitle || 'INITIATE CYBER AUDIT';
+  const emailAddress = data?.email || 'sec-ops@cyberops-defense.com';
+  const phoneOrHotline = data?.phone || '24/7 INCIDENT HOTLINE // PGP ENCRYPTED';
+
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
 
   // Form state for end user across multi-step wizard
   const [form, setForm] = useState({
@@ -266,7 +277,7 @@ export function ContactSection() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-cyan-400 font-mono text-xs tracking-[0.25em] uppercase">
               <Lock className="w-3.5 h-3.5" />
-              <span>INITIATE SECURITY DISCOVERY</span>
+              <span>{badgeText}</span>
             </div>
 
             {/* Owner Admin Config Button (Subtle gear icon for owner setup) */}
@@ -284,10 +295,7 @@ export function ContactSection() {
           </div>
 
           <h2 className="text-4xl md:text-6xl font-black tracking-wider text-white uppercase font-sans leading-tight">
-            INITIATE <br />
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-400">
-              CYBER AUDIT
-            </span>
+            {sectionTitle}
           </h2>
 
           <p className="text-slate-300 font-mono text-sm leading-relaxed max-w-md">
@@ -297,11 +305,11 @@ export function ContactSection() {
           <div className="space-y-4 pt-6 border-t border-white/10 font-mono text-xs">
             <div className="flex items-center gap-3 text-slate-300">
               <Mail className="w-4 h-4 text-cyan-400" />
-              <span>sec-ops@cyberops-defense.com</span>
+              <span>{emailAddress}</span>
             </div>
             <div className="flex items-center gap-3 text-slate-300">
               <ShieldAlert className="w-4 h-4 text-emerald-400" />
-              <span>24/7 INCIDENT HOTLINE // PGP ENCRYPTED</span>
+              <span>{phoneOrHotline}</span>
             </div>
             <div className="flex items-center gap-3 text-slate-300">
               <Globe className="w-4 h-4 text-purple-400" />
@@ -310,8 +318,8 @@ export function ContactSection() {
           </div>
         </div>
 
-        {/* Right Column: Multi-Step Form Container wrapped in Liquid Shader Card */}
-        <LiquidCard className="rounded-3xl bg-black/50 border border-cyan-500/30 backdrop-blur-xl shadow-[0_0_40px_rgba(0,240,255,0.15)]">
+        {/* Right Column: Multi-Step Form Container */}
+        <div className="rounded-3xl bg-black/50 border border-cyan-500/30 backdrop-blur-xl shadow-[0_0_40px_rgba(0,240,255,0.15)]">
           <div className="p-6 sm:p-8">
             {submitted ? (
               <div className="py-12 text-center space-y-4 font-mono">
@@ -704,7 +712,7 @@ export function ContactSection() {
               </form>
             )}
           </div>
-        </LiquidCard>
+        </div>
       </div>
 
       {/* Owner Admin Settings Modal */}

@@ -1,21 +1,29 @@
 import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { Background3D } from './Background3D';
-import { CapabilityCard, CardVariant } from './CapabilityCard';
+import { CapabilityCard } from './CapabilityCard';
 import { GlowingButton } from './GlowingButton';
 import { Cpu } from 'lucide-react';
+import { SanityTechStackBlock } from '../../sanity/client';
 
 interface TechStackSectionProps {
+  data?: SanityTechStackBlock;
   onExploreServices?: () => void;
 }
 
-export function TechStackSection({ onExploreServices }: TechStackSectionProps) {
+export function TechStackSection({ data, onExploreServices }: TechStackSectionProps) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLDivElement>(null);
 
   const [mousePos, setMousePos] = useState({ x: 0.5, y: 0.5 });
+
+  const badgeText = data?.badgeText || 'CORE CAPABILITIES // DEFENSE SUITE';
+  const sectionTitle = data?.sectionTitle || 'MILITARY-GRADE CYBER ENGINE';
+  const subtitle =
+    data?.subtitle ||
+    'FORTIFYING HYBRID MULTI-CLOUD INFRASTRUCTURES THROUGH AUTOMATED THREAT HUNTING, ZERO-TRUST MESH ARCHITECTURE, AND POST-QUANTUM CRYPTOGRAPHY.';
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -71,7 +79,7 @@ export function TechStackSection({ onExploreServices }: TechStackSectionProps) {
       observer.disconnect();
       tl.kill();
     };
-  }, []);
+  }, [sectionTitle]);
 
   return (
     <section
@@ -91,18 +99,15 @@ export function TechStackSection({ onExploreServices }: TechStackSectionProps) {
         <div ref={titleRef} className="text-center max-w-3xl mb-16 space-y-3">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-950/60 border border-cyan-500/30 text-cyan-400 text-xs font-mono tracking-[0.25em] uppercase shadow-[0_0_20px_rgba(0,240,255,0.2)]">
             <Cpu className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
-            <span>CORE CAPABILITIES // DEFENSE SUITE</span>
+            <span>{badgeText}</span>
           </div>
 
           <h2 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-wider text-white uppercase font-sans leading-tight">
-            MILITARY-GRADE <br />
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-sky-200 to-purple-400 drop-shadow-[0_0_25px_rgba(0,240,255,0.3)]">
-              CYBER ENGINE
-            </span>
+            {sectionTitle}
           </h2>
 
           <p className="text-slate-300 font-mono text-xs sm:text-sm max-w-xl mx-auto leading-relaxed">
-            FORTIFYING HYBRID MULTI-CLOUD INFRASTRUCTURES THROUGH AUTOMATED THREAT HUNTING, ZERO-TRUST MESH ARCHITECTURE, AND POST-QUANTUM CRYPTOGRAPHY.
+            {subtitle}
           </p>
         </div>
 
@@ -111,37 +116,53 @@ export function TechStackSection({ onExploreServices }: TechStackSectionProps) {
           ref={cardsRef}
           className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-5xl mb-16"
         >
-          {/* Card 1: Top-Left */}
-          <CapabilityCard
-            variant="webgl"
-            title="OFFENSIVE RED TEAMING // PENTESTING"
-            description="Simulated APT Campaigns & Kernel Zero-Day Discovery."
-            badge="OFFENSIVE"
-          />
-
-          {/* Card 2: Top-Right */}
-          <CapabilityCard
-            variant="dataviz"
-            title="AUTONOMOUS AI SOC & SIEM"
-            description="Real-Time Telemetry Analytics & Sub-Second Remediation."
-            badge="THREAT HUNT"
-          />
-
-          {/* Card 3: Bottom-Left */}
-          <CapabilityCard
-            variant="react"
-            title="ZERO-TRUST MESH (ZTNA)"
-            description="Continuous Ephemeral Identity & Dynamic Microsegmentation."
-            badge="ZERO-TRUST"
-          />
-
-          {/* Card 4: Bottom-Right */}
-          <CapabilityCard
-            variant="shaders"
-            title="POST-QUANTUM CRYPTOGRAPHY"
-            description="NIST Lattice-Based Kyber & Dilithium HSM Hardening."
-            badge="ENCRYPTION"
-          />
+          {data?.capabilities && data.capabilities.length > 0 ? (
+            data.capabilities.map((cap, idx) => {
+              const variants: Array<'webgl' | 'dataviz' | 'react' | 'shaders'> = [
+                'webgl',
+                'dataviz',
+                'react',
+                'shaders',
+              ];
+              return (
+                <CapabilityCard
+                  key={cap.id || idx}
+                  variant={variants[idx % variants.length]}
+                  title={cap.title}
+                  description={cap.description}
+                  badge={cap.tags?.[0] || 'DEFENSE'}
+                />
+              );
+            })
+          ) : (
+            <>
+              {/* Fallback Cards */}
+              <CapabilityCard
+                variant="webgl"
+                title="OFFENSIVE RED TEAMING // PENTESTING"
+                description="Simulated APT Campaigns & Kernel Zero-Day Discovery."
+                badge="OFFENSIVE"
+              />
+              <CapabilityCard
+                variant="dataviz"
+                title="AUTONOMOUS AI SOC & SIEM"
+                description="Real-Time Telemetry Analytics & Sub-Second Remediation."
+                badge="THREAT HUNT"
+              />
+              <CapabilityCard
+                variant="react"
+                title="ZERO-TRUST MESH (ZTNA)"
+                description="Continuous Ephemeral Identity & Dynamic Microsegmentation."
+                badge="ZERO-TRUST"
+              />
+              <CapabilityCard
+                variant="shaders"
+                title="POST-QUANTUM CRYPTOGRAPHY"
+                description="NIST Lattice-Based Kyber & Dilithium HSM Hardening."
+                badge="ENCRYPTION"
+              />
+            </>
+          )}
         </div>
 
         {/* CTA Button */}
@@ -152,3 +173,4 @@ export function TechStackSection({ onExploreServices }: TechStackSectionProps) {
     </section>
   );
 }
+

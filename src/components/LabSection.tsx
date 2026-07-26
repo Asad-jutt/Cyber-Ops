@@ -2,14 +2,18 @@ import React from 'react';
 import { Sliders, RefreshCw, Cpu, Zap, Eye, Box, Shield, Lock } from 'lucide-react';
 import { LabSettings } from '../types';
 import { sound } from '../utils/audio';
-import { LiquidCard } from './LiquidCard';
+import { SanityLabBlock } from '../sanity/client';
 
 interface LabSectionProps {
+  data?: SanityLabBlock;
   labSettings: LabSettings;
   onUpdateSettings: (settings: LabSettings) => void;
 }
 
-export function LabSection({ labSettings, onUpdateSettings }: LabSectionProps) {
+export function LabSection({ data, labSettings, onUpdateSettings }: LabSectionProps) {
+  const badgeText = data?.badgeText || 'WAR ROOM // THREAT VECTOR & ENCRYPTION SIMULATOR';
+  const sectionTitle = data?.sectionTitle || 'WAR ROOM SIMULATOR';
+
   const handleChange = <K extends keyof LabSettings>(key: K, value: LabSettings[K]) => {
     sound.playHover();
     onUpdateSettings({
@@ -22,12 +26,12 @@ export function LabSection({ labSettings, onUpdateSettings }: LabSectionProps) {
     {
       name: 'QUANTUM LATTICE',
       settings: {
-        geometry: 'crystalMatrix' as const,
+        geometry: (data?.defaultGeometry as any) || ('crystalMatrix' as const),
         wireframe: false,
         rotationSpeed: 0.8,
         particleCount: 2000,
-        primaryColor: '#00f0ff',
-        accentColor: '#d946ef',
+        primaryColor: data?.primaryColorHex || '#00f0ff',
+        accentColor: data?.accentColorHex || '#d946ef',
         metalness: 0.9,
         roughness: 0.1,
         bloomIntensity: 1.5,
@@ -88,10 +92,10 @@ export function LabSection({ labSettings, onUpdateSettings }: LabSectionProps) {
         <div>
           <div className="flex items-center gap-2 text-purple-400 font-mono text-xs tracking-[0.25em] mb-2 uppercase">
             <Lock className="w-3.5 h-3.5" />
-            <span>WAR ROOM // THREAT VECTOR & ENCRYPTION SIMULATOR</span>
+            <span>{badgeText}</span>
           </div>
           <h2 className="text-4xl md:text-6xl font-black tracking-wider text-white uppercase font-sans">
-            WAR ROOM SIMULATOR
+            {sectionTitle}
           </h2>
         </div>
 
@@ -117,11 +121,7 @@ export function LabSection({ labSettings, onUpdateSettings }: LabSectionProps) {
       {/* Control Panel Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Panel 1: Geometry & Topology */}
-        <LiquidCard
-          color1="#00f0ff"
-          color2="#3b82f6"
-          className="rounded-2xl bg-black/40 border border-white/10 backdrop-blur-md"
-        >
+        <div className="rounded-2xl bg-black/40 border border-white/10 backdrop-blur-md">
           <div className="p-6 space-y-6">
             <div className="flex items-center gap-2 text-cyan-400 font-mono text-xs tracking-widest uppercase border-b border-white/10 pb-3 font-bold">
               <Shield className="w-4 h-4" />
@@ -174,14 +174,10 @@ export function LabSection({ labSettings, onUpdateSettings }: LabSectionProps) {
               </button>
             </div>
           </div>
-        </LiquidCard>
+        </div>
 
         {/* Panel 2: Physics & Motion */}
-        <LiquidCard
-          color1="#a855f7"
-          color2="#ec4899"
-          className="rounded-2xl bg-black/40 border border-white/10 backdrop-blur-md"
-        >
+        <div className="rounded-2xl bg-black/40 border border-white/10 backdrop-blur-md">
           <div className="p-6 space-y-6">
             <div className="flex items-center gap-2 text-purple-400 font-mono text-xs tracking-widest uppercase border-b border-white/10 pb-3 font-bold">
               <Zap className="w-4 h-4" />
@@ -222,14 +218,10 @@ export function LabSection({ labSettings, onUpdateSettings }: LabSectionProps) {
               />
             </div>
           </div>
-        </LiquidCard>
+        </div>
 
         {/* Panel 3: Optics & Color */}
-        <LiquidCard
-          color1="#10b981"
-          color2="#00f0ff"
-          className="rounded-2xl bg-black/40 border border-white/10 backdrop-blur-md"
-        >
+        <div className="rounded-2xl bg-black/40 border border-white/10 backdrop-blur-md">
           <div className="p-6 space-y-6">
             <div className="flex items-center gap-2 text-emerald-400 font-mono text-xs tracking-widest uppercase border-b border-white/10 pb-3 font-bold">
               <Cpu className="w-4 h-4" />
@@ -268,7 +260,7 @@ export function LabSection({ labSettings, onUpdateSettings }: LabSectionProps) {
               </div>
             </div>
           </div>
-        </LiquidCard>
+        </div>
       </div>
     </section>
   );
