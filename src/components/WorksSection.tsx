@@ -165,41 +165,52 @@ export function WorksSection({ data, onOpenLiveDemo }: WorksSectionProps) {
 
       {/* Interactive Project Details Modal */}
       {selectedProject && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 md:p-10 bg-black/80 backdrop-blur-xl animate-fadeIn">
-          <div className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-3xl bg-[#0b0f19] border border-cyan-500/30 p-6 md:p-10 shadow-[0_0_50px_rgba(0,240,255,0.2)] text-white">
-            {/* Close Button */}
-            <button
-              onClick={handleCloseModal}
-              className="absolute top-6 right-6 w-10 h-10 rounded-full bg-white/10 hover:bg-cyan-400 hover:text-black flex items-center justify-center transition-all duration-300 cursor-pointer"
-              data-cursor-hover
-            >
-              <X className="w-5 h-5" />
-            </button>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 md:p-10 bg-black/85 backdrop-blur-xl animate-fadeIn">
+          <div className="relative w-full max-w-4xl max-h-[92vh] overflow-y-auto rounded-2xl sm:rounded-3xl bg-[#0b0f19] border border-cyan-500/30 p-4 sm:p-8 md:p-10 shadow-[0_0_50px_rgba(0,240,255,0.2)] text-white">
+            {/* Sticky Top Header with Close Button */}
+            <div className="sticky -top-4 sm:-top-8 md:-top-10 z-30 flex items-center justify-between -mx-4 -mt-4 sm:-mx-8 sm:-mt-8 md:-mx-10 md:-mt-10 px-4 py-3 sm:px-8 sm:py-4 bg-[#0b0f19]/95 backdrop-blur-md border-b border-white/10 mb-6">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
+                <span className="text-xs font-mono text-cyan-300 tracking-wider uppercase font-bold">
+                  PROJECT SPECIFICATION // {selectedProject.year}
+                </span>
+              </div>
+              <button
+                onClick={handleCloseModal}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 hover:bg-cyan-400 hover:text-black text-xs font-mono text-white transition-all duration-300 cursor-pointer border border-white/10 hover:border-cyan-400"
+                data-cursor-hover
+                title="Close Modal"
+              >
+                <span className="hidden sm:inline font-bold">CLOSE</span>
+                <X className="w-4 h-4" />
+              </button>
+            </div>
 
             {/* Modal Image Header */}
-            <div className="relative aspect-video rounded-2xl overflow-hidden mb-8 border border-white/10">
+            <div className="relative h-48 sm:h-64 md:h-80 w-full rounded-xl sm:rounded-2xl overflow-hidden mb-6 border border-white/10 bg-slate-900">
               <img
                 src={selectedProject.image}
                 alt={selectedProject.title}
                 referrerPolicy="no-referrer"
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0b0f19] via-transparent to-transparent opacity-90" />
-              <div className="absolute bottom-6 left-6 right-6">
-                <span className="px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-400/50 text-[10px] font-mono text-cyan-300 uppercase tracking-widest mb-2 inline-block">
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0b0f19] via-[#0b0f19]/30 to-transparent opacity-90" />
+              
+              <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6">
+                <span className="px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full bg-cyan-950/90 border border-cyan-400/50 text-[10px] font-mono text-cyan-300 uppercase tracking-widest mb-2 inline-block">
                   {selectedProject.category}
                 </span>
-                <h3 className="text-3xl md:text-4xl font-black font-sans uppercase text-white">
+                <h3 className="text-2xl sm:text-3xl md:text-4xl font-black font-sans uppercase text-white leading-tight">
                   {selectedProject.title}
                 </h3>
               </div>
             </div>
 
             {/* Meta Stats */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 rounded-xl bg-white/5 border border-white/10 font-mono text-xs mb-8">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl bg-white/5 border border-white/10 font-mono text-xs mb-6">
               <div>
                 <div className="text-slate-400 text-[10px] uppercase">CLIENT ENTITY</div>
-                <div className="font-bold text-cyan-300">{selectedProject.client}</div>
+                <div className="font-bold text-cyan-300 truncate">{selectedProject.client}</div>
               </div>
               <div>
                 <div className="text-slate-400 text-[10px] uppercase">ENGAGEMENT YEAR</div>
@@ -207,19 +218,19 @@ export function WorksSection({ data, onOpenLiveDemo }: WorksSectionProps) {
               </div>
               <div>
                 <div className="text-slate-400 text-[10px] uppercase">ROLE</div>
-                <div className="font-bold text-emerald-400">{selectedProject.role}</div>
+                <div className="font-bold text-emerald-400 truncate">{selectedProject.role}</div>
               </div>
               <div>
                 <div className="text-slate-400 text-[10px] uppercase">STATUS</div>
-                <div className="font-bold text-purple-400">DEPLOYED & ACTIVE</div>
+                <div className="font-bold text-purple-400 truncate">ACTIVE</div>
               </div>
             </div>
 
             {/* Description & Metrics */}
-            <div className="space-y-6 font-mono text-sm text-slate-300 leading-relaxed mb-8">
+            <div className="space-y-6 font-mono text-xs sm:text-sm text-slate-300 leading-relaxed mb-6">
               <div>
                 <h4 className="text-xs font-bold text-cyan-400 uppercase tracking-widest mb-2">ENGAGEMENT SCOPE</h4>
-                <p>{selectedProject.fullDescription || selectedProject.description}</p>
+                <p className="text-slate-300">{selectedProject.fullDescription || selectedProject.description}</p>
               </div>
 
               {selectedProject.metrics && selectedProject.metrics.length > 0 && (
@@ -228,7 +239,7 @@ export function WorksSection({ data, onOpenLiveDemo }: WorksSectionProps) {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {selectedProject.metrics.map((m, idx) => (
                       <div key={idx} className="p-3 rounded-xl bg-black/60 border border-emerald-500/30">
-                        <div className="text-lg font-bold text-emerald-300">{m.value}</div>
+                        <div className="text-base sm:text-lg font-bold text-emerald-300">{m.value}</div>
                         <div className="text-xs text-slate-400">{m.label}</div>
                       </div>
                     ))}
@@ -238,22 +249,30 @@ export function WorksSection({ data, onOpenLiveDemo }: WorksSectionProps) {
             </div>
 
             {/* Modal Actions */}
-            <div className="flex flex-wrap items-center justify-between gap-4 pt-6 border-t border-white/10">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 pt-6 border-t border-white/10">
               <div className="flex flex-wrap gap-2">
                 {selectedProject.tags.map((tag) => (
-                  <span key={tag} className="px-3 py-1 rounded-md bg-white/5 border border-white/10 font-mono text-xs text-slate-300">
+                  <span key={tag} className="px-2.5 py-1 rounded-md bg-white/5 border border-white/10 font-mono text-[11px] text-slate-300">
                     #{tag}
                   </span>
                 ))}
               </div>
 
-              <button
-                onClick={() => handleTriggerLiveDemo(selectedProject.title)}
-                className="px-6 py-3 rounded-full bg-cyan-400 text-black font-mono font-bold text-xs tracking-widest uppercase hover:bg-cyan-300 shadow-[0_0_20px_rgba(0,240,255,0.4)] transition-all flex items-center gap-2 cursor-pointer"
-              >
-                <span>RUN SIMULATED AUDIT SCAN</span>
-                <ExternalLink className="w-4 h-4" />
-              </button>
+              <div className="flex items-center gap-3 w-full sm:w-auto">
+                <button
+                  onClick={handleCloseModal}
+                  className="flex-1 sm:flex-none px-5 py-3 rounded-full bg-white/10 border border-white/20 text-white font-mono font-bold text-xs tracking-wider uppercase hover:bg-white/20 transition-all cursor-pointer text-center"
+                >
+                  CLOSE
+                </button>
+                <button
+                  onClick={() => handleTriggerLiveDemo(selectedProject.title)}
+                  className="flex-1 sm:flex-none px-6 py-3 rounded-full bg-cyan-400 text-black font-mono font-bold text-xs tracking-widest uppercase hover:bg-cyan-300 shadow-[0_0_20px_rgba(0,240,255,0.4)] transition-all flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <span>RUN AUDIT SCAN</span>
+                  <ExternalLink className="w-4 h-4" />
+                </button>
+              </div>
             </div>
           </div>
         </div>

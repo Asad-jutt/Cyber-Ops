@@ -118,6 +118,7 @@ function InteractivePillarCard({
 
   return (
     <LiquidCard
+      disableShader={true}
       color1={color1}
       color2={color2}
       className={`relative rounded-2xl transition-all duration-300 backdrop-blur-xl border flex flex-col justify-between group cursor-pointer overflow-hidden ${

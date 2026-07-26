@@ -8,6 +8,7 @@ interface LiquidCardProps {
   color2?: string;
   onClick?: () => void;
   onMouseEnter?: () => void;
+  disableShader?: boolean;
 }
 
 export function LiquidCard({
@@ -16,7 +17,8 @@ export function LiquidCard({
   color1 = '#00f0ff',
   color2 = '#d946ef',
   onClick,
-  onMouseEnter
+  onMouseEnter,
+  disableShader = false,
 }: LiquidCardProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0.5, y: 0.5 });
@@ -49,12 +51,14 @@ export function LiquidCard({
       className={`relative overflow-hidden group ${className}`}
     >
       {/* WebGL Liquid Hover Shader Background Layer */}
-      <LiquidShaderCanvas
-        isHovered={isHovered}
-        mousePos={mousePos}
-        color1={color1}
-        color2={color2}
-      />
+      {!disableShader && (
+        <LiquidShaderCanvas
+          isHovered={isHovered}
+          mousePos={mousePos}
+          color1={color1}
+          color2={color2}
+        />
+      )}
 
       {/* Children Card Content */}
       <div className="relative z-10 w-full h-full">
@@ -63,3 +67,4 @@ export function LiquidCard({
     </div>
   );
 }
+

@@ -181,7 +181,7 @@ export function CapabilityCard({
           <div
             className={`w-16 h-16 rounded-2xl border transition-all duration-300 flex items-center justify-center overflow-hidden ${
               isHovered
-                ? 'bg-cyan-950/80 border-cyan-300 shadow-[0_0_30px_rgba(0,240,255,0.6)]'
+                ? 'bg-purple-950/80 border-purple-300 shadow-[0_0_30px_rgba(217,70,239,0.5)]'
                 : 'bg-purple-950/60 border-purple-400/40 shadow-[0_0_20px_rgba(217,70,239,0.2)]'
             }`}
           >
