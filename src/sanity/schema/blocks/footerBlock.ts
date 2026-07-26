@@ -7,7 +7,7 @@ export const footerBlock = {
       name: 'brandName',
       title: 'Brand Name',
       type: 'string',
-      initialValue: 'CYBER OPS // ZERO-TRUST LABS',
+      initialValue: 'CYBER OPS // CYBERSECURITY LABS',
     },
     {
       name: 'tagline',
@@ -15,7 +15,7 @@ export const footerBlock = {
       type: 'text',
       rows: 2,
       initialValue:
-        'Next-generation cybersecurity engineering, zero-trust infrastructure, and post-quantum cryptography solutions.',
+        'Next-generation cybersecurity engineering, resilient enterprise infrastructure, and post-quantum cryptography solutions.',
     },
     {
       name: 'copyrightNotice',

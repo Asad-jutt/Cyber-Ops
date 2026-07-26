@@ -20,7 +20,7 @@ export function TechStackSection({ data, onExploreServices }: TechStackSectionPr
   const sectionTitle = data?.sectionTitle || 'MILITARY-GRADE CYBER ENGINE';
   const subtitle =
     data?.subtitle ||
-    'FORTIFYING HYBRID MULTI-CLOUD INFRASTRUCTURES THROUGH AUTOMATED THREAT HUNTING, ZERO-TRUST MESH ARCHITECTURE, AND POST-QUANTUM CRYPTOGRAPHY.';
+    'FORTIFYING HYBRID MULTI-CLOUD INFRASTRUCTURES THROUGH AUTOMATED THREAT HUNTING, SECURE MESH ARCHITECTURE, AND POST-QUANTUM CRYPTOGRAPHY.';
 
   // GSAP Stagger Entrance Animation
   useEffect(() => {
@@ -130,9 +130,9 @@ export function TechStackSection({ data, onExploreServices }: TechStackSectionPr
             />
             <CapabilityCard
               variant="react"
-              title="ZERO-TRUST MESH (ZTNA)"
+              title="SECURE MESH ARCHITECTURE (ZTNA)"
               description="Continuous Ephemeral Identity & Dynamic Microsegmentation."
-              badge="ZERO-TRUST"
+              badge="SECURE MESH"
             />
             <CapabilityCard
               variant="shaders"

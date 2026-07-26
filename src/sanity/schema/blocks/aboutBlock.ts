@@ -28,7 +28,7 @@ export const aboutBlock = {
       of: [{ type: 'text' }],
       initialValue: [
         'Founded by former intelligence agency security directors and principal cryptography engineers, Cyber Ops operates on a singular mandate: complete digital immunity.',
-        'We do not rely on passive signature scanners or off-the-shelf antivirus rulesets. We engineer bespoke, kernel-level kernel hooks, zero-trust cryptographic handshakes, and quantum-safe key distribution systems that neutralize attacks before payload execution.',
+        'We do not rely on passive signature scanners or off-the-shelf antivirus rulesets. We engineer bespoke, kernel-level kernel hooks, high-assurance cryptographic handshakes, and quantum-safe key distribution systems that neutralize attacks before payload execution.',
       ],
     },
     {

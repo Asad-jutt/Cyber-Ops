@@ -13,7 +13,7 @@ export const heroBlock = {
       name: 'headlinePrimary',
       title: 'Headline Primary Line',
       type: 'string',
-      initialValue: 'ZERO-TRUST ARCHITECTURE &',
+      initialValue: 'ADVANCED SECURITY ARCHITECTURE &',
     },
     {
       name: 'headlineAccent',

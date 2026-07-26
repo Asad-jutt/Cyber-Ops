@@ -7,7 +7,7 @@ export const pageSchema = {
       name: 'title',
       title: 'Page Title',
       type: 'string',
-      initialValue: 'Cyber Ops // Zero-Trust Cyber Security Consulting',
+      initialValue: 'Cyber Ops // Enterprise Cyber Security Consulting',
     },
     {
       name: 'slug',
@@ -52,7 +52,7 @@ export const pageSchema = {
           name: 'metaTitle',
           title: 'Meta Title',
           type: 'string',
-          initialValue: 'Cyber Ops | Zero-Trust & Post-Quantum Defense',
+          initialValue: 'Cyber Ops | Enterprise & Post-Quantum Defense',
         },
         {
           name: 'metaDescription',
@@ -60,7 +60,7 @@ export const pageSchema = {
           type: 'text',
           rows: 3,
           initialValue:
-            'Elite cybersecurity consulting firm delivering zero-trust architecture, red team penetration testing, and post-quantum encryption.',
+            'Elite cybersecurity consulting firm delivering advanced architecture, red team penetration testing, and post-quantum encryption.',
         },
       ],
     },

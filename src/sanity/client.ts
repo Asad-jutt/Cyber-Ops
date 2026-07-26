@@ -179,15 +179,15 @@ export const PAGE_BUILDER_GROQ = `*[_type == "page" && (slug.current == $slug ||
 
 // Default Fallback Page Data ensuring out-of-the-box working application
 export const DEFAULT_SANITY_PAGE_DATA: SanityPage = {
-  title: 'Cyber Ops // Zero-Trust Cyber Security Consulting',
+  title: 'Cyber Ops // Enterprise Cyber Security Consulting',
   globalTheme: {
     primaryHex: '#00f0ff',
     secondaryHex: '#d946ef',
     backgroundHex: '#0b0f19',
   },
   seo: {
-    metaTitle: 'Cyber Ops | Zero-Trust & Post-Quantum Defense',
-    metaDescription: 'Elite cybersecurity consulting firm delivering zero-trust architecture, red team penetration testing, and post-quantum encryption.',
+    metaTitle: 'Cyber Ops | Enterprise & Post-Quantum Defense',
+    metaDescription: 'Elite cybersecurity consulting firm delivering advanced architecture, red team penetration testing, and post-quantum encryption.',
   },
   navigation: [
     { label: '// 01. WORK', sectionId: 'work' },
@@ -201,7 +201,7 @@ export const DEFAULT_SANITY_PAGE_DATA: SanityPage = {
       _type: 'heroBlock',
       _key: 'hero_1',
       statusBadge: 'SYSTEM STATUS // ALL SYSTEMS HARDENED',
-      headlinePrimary: 'ZERO-TRUST ARCHITECTURE &',
+      headlinePrimary: 'ADVANCED SECURITY ARCHITECTURE &',
       headlineAccent: 'QUANTUM-RESISTANT CYBER OPS',
       subheadline:
         'Engineering military-grade perimeter defense, kernel-level filter hooks, and cloud infrastructure audit pipelines for Fortune 500 enterprises and defense contractors.',
@@ -249,7 +249,7 @@ export const DEFAULT_SANITY_PAGE_DATA: SanityPage = {
       storyHeadline: 'COMBAT-TESTED CYBERSECURITY ARCHITECTS',
       storyParagraphs: [
         'Founded by former intelligence agency security directors and principal cryptography engineers, Cyber Ops operates on a singular mandate: complete digital immunity.',
-        'We do not rely on passive signature scanners or off-the-shelf antivirus rulesets. We engineer bespoke, kernel-level kernel hooks, zero-trust cryptographic handshakes, and quantum-safe key distribution systems that neutralize attacks before payload execution.',
+        'We do not rely on passive signature scanners or off-the-shelf antivirus rulesets. We engineer bespoke, kernel-level kernel hooks, high-assurance cryptographic handshakes, and quantum-safe key distribution systems that neutralize attacks before payload execution.',
       ],
       pillars: [
         {
@@ -258,7 +258,7 @@ export const DEFAULT_SANITY_PAGE_DATA: SanityPage = {
           iconName: 'Shield',
         },
         {
-          title: 'Zero-Trust Mesh Networks',
+          title: 'Enterprise Mesh Networks',
           desc: 'Micro-segmented perimeter security enforcing continuous identity verification and ephemeral access tokens at every API boundary.',
           iconName: 'Lock',
         },
@@ -288,9 +288,9 @@ export const DEFAULT_SANITY_PAGE_DATA: SanityPage = {
     {
       _type: 'footerBlock',
       _key: 'footer_1',
-      brandName: 'CYBER OPS // ZERO-TRUST LABS',
+      brandName: 'CYBER OPS // CYBERSECURITY LABS',
       tagline:
-        'Next-generation cybersecurity engineering, zero-trust infrastructure, and post-quantum cryptography solutions.',
+        'Next-generation cybersecurity engineering, resilient enterprise infrastructure, and post-quantum cryptography solutions.',
       copyrightNotice: '© 2026 CYBER OPS CONSULTING INC. ALL RIGHTS RESERVED.',
       statusText: 'DEFCON 5 // ALL NODES SECURE',
     },
