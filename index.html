@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cyber Ops // Zero-Trust Cybersecurity Consulting</title>
+    <script>
+      // Defensive guard against browser extension injection conflicts (e.g., MetaMask/crypto wallet 'ethereum' redefinition)
+      (function() {
+        try {
+          var origDefineProperty = Object.defineProperty;
+          Object.defineProperty = function(obj, prop, descriptor) {
+            if (obj === window && prop === 'ethereum') {
+              try {
+                if (descriptor && !descriptor.configurable) {
+                  descriptor.configurable = true;
+                }
+                return origDefineProperty.call(this, obj, prop, descriptor);
+              } catch (e) {
+                console.warn('Prevented duplicate ethereum property definition error from extension');
+                return obj;
+              }
+            }
+            return origDefineProperty.apply(this, arguments);
+          };
+        } catch (e) {}
+
+        window.addEventListener('error', function(e) {
+          if (e && e.message && e.message.includes('ethereum')) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+          }
+        }, true);
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+

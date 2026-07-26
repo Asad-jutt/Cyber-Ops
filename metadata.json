@@ -1,0 +1,6 @@
+{
+  "name": "Cyber Ops // Zero-Trust Defense",
+  "description": "Enterprise Cybersecurity Consulting, Offensive Threat Audits, Autonomous SOC Intelligence, and Quantum-Resistant Defense Architecture.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

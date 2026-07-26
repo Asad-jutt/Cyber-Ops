@@ -1,0 +1,163 @@
+import React, { useEffect, useRef } from 'react';
+import { ArrowUpRight, ShieldCheck, Cpu, Lock, ShieldAlert } from 'lucide-react';
+import gsap from 'gsap';
+import { sound } from '../utils/audio';
+import { ScrambleText } from './ScrambleText';
+import { LiquidCard } from './LiquidCard';
+
+interface HeroContentProps {
+  onBeginExploration: () => void;
+  onOpenLab: () => void;
+}
+
+export function HeroContent({ onBeginExploration, onOpenLab }: HeroContentProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const subtitleRef = useRef<HTMLDivElement>(null);
+  const descRef = useRef<HTMLParagraphElement>(null);
+  const buttonsRef = useRef<HTMLDivElement>(null);
+  const badgesRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+      tl.fromTo(
+        subtitleRef.current,
+        { opacity: 0, y: -20 },
+        { opacity: 1, y: 0, duration: 0.8 }
+      )
+        .fromTo(
+          titleRef.current,
+          { opacity: 0, y: 40, scale: 0.95, filter: 'blur(10px)' },
+          { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)', duration: 1.2 },
+          '-=0.4'
+        )
+        .fromTo(
+          descRef.current,
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 0.8 },
+          '-=0.6'
+        )
+        .fromTo(
+          buttonsRef.current,
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 0.8 },
+          '-=0.5'
+        )
+        .fromTo(
+          badgesRef.current,
+          { opacity: 0, scale: 0.9 },
+          { opacity: 1, scale: 1, duration: 0.8 },
+          '-=0.5'
+        );
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <div
+      ref={containerRef}
+      className="relative z-10 flex flex-col justify-center min-h-screen px-6 md:px-12 lg:px-20 pt-24 pb-12 max-w-5xl pointer-events-none"
+    >
+      {/* Subtitle / Eyebrow */}
+      <div
+        ref={subtitleRef}
+        className="flex items-center gap-2 mb-4 pointer-events-auto"
+      >
+        <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-cyan-950/70 border border-cyan-500/40 text-cyan-400 text-xs font-mono tracking-[0.2em] shadow-[0_0_20px_rgba(0,240,255,0.25)] uppercase">
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          CYBER OPS // ENTERPRISE CYBER ADVISORY
+        </span>
+      </div>
+
+      {/* Main Hero Headline with Scramble Effect (Heading only) */}
+      <h1
+        ref={titleRef}
+        className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight text-white uppercase leading-[0.95] mb-6 drop-shadow-[0_0_35px_rgba(0,240,255,0.2)] font-sans"
+      >
+        <ScrambleText text="CYBER OPS" /> <br />
+        <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-sky-200 to-purple-500 animate-gradient">
+          <ScrambleText text="CYBER DEFENSE" />
+        </span>
+      </h1>
+
+      {/* Description */}
+      <p
+        ref={descRef}
+        className="text-slate-300 text-sm sm:text-base md:text-lg max-w-2xl font-mono leading-relaxed mb-8 tracking-wide text-balance"
+      >
+        FORTIFYING GLOBAL ENTERPRISES, DEFENSE CONTRACTORS, AND FINTECH INFRASTRUCTURES WITH POST-QUANTUM CRYPTOGRAPHY, OFFENSIVE RED-TEAM PENTESTING, AND AUTONOMOUS AI SOC THREAT HUNTING.
+      </p>
+
+      {/* Action Buttons */}
+      <div
+        ref={buttonsRef}
+        className="flex flex-wrap items-center gap-4 mb-12 pointer-events-auto"
+      >
+        {/* Initiate Threat Audit Button */}
+        <button
+          onClick={() => {
+            sound.playClick();
+            onBeginExploration();
+          }}
+          onMouseEnter={() => sound.playHover()}
+          className="group relative inline-flex items-center gap-3 px-8 py-4 rounded-full bg-cyan-500/10 border border-cyan-400/80 text-cyan-300 font-mono text-sm tracking-widest font-bold uppercase transition-all duration-300 hover:bg-cyan-400 hover:text-black hover:shadow-[0_0_35px_rgba(0,240,255,0.6)] cursor-pointer"
+          data-cursor-hover
+          data-cursor-text="AUDIT"
+        >
+          <span>INITIATE THREAT AUDIT</span>
+          <div className="w-8 h-8 rounded-full bg-cyan-400/20 group-hover:bg-black/20 flex items-center justify-center transition-colors">
+            <ArrowUpRight className="w-4 h-4 group-hover:rotate-45 transition-transform duration-300" />
+          </div>
+          {/* Subtle Ambient Pulse Ring */}
+          <span className="absolute -inset-1 rounded-full border border-cyan-400/40 animate-ping opacity-30 pointer-events-none" />
+        </button>
+
+        {/* Access War Room Button */}
+        <button
+          onClick={() => {
+            sound.playClick();
+            onOpenLab();
+          }}
+          onMouseEnter={() => sound.playHover()}
+          className="flex items-center gap-2 px-6 py-4 rounded-full bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:border-purple-500/50 hover:bg-purple-950/20 transition-all duration-300 font-mono text-xs tracking-widest cursor-pointer"
+          data-cursor-hover
+          data-cursor-text="WAR ROOM"
+        >
+          <Lock className="w-4 h-4 text-purple-400" />
+          <span>SIMULATE WAR ROOM</span>
+        </button>
+      </div>
+
+      {/* Technical Badges with Liquid Shader Cards */}
+      <div
+        ref={badgesRef}
+        className="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-3xl pointer-events-auto"
+      >
+        {[
+          { label: 'FRAMEWORK', val: 'CYBER ARCHITECTURE', icon: Lock },
+          { label: 'ENCRYPTION', val: '256-BIT LATTICE', icon: ShieldCheck },
+          { label: 'SOC INTELLIGENCE', val: 'AI THREAT HUNT', icon: Cpu },
+          { label: 'COMPLIANCE', val: 'ISO 27001 / SOC 2', icon: ShieldAlert }
+        ].map((item, idx) => (
+          <LiquidCard
+            key={idx}
+            className="rounded-xl bg-black/50 border border-white/10 backdrop-blur-md hover:border-cyan-500/40 transition-colors"
+          >
+            <div className="p-3.5">
+              <div className="flex items-center gap-1.5 text-[10px] font-mono text-cyan-400 mb-1">
+                <item.icon className="w-3.5 h-3.5 text-cyan-400" />
+                <span>{item.label}</span>
+              </div>
+              <div className="text-xs font-bold font-mono text-white tracking-wider">
+                {item.val}
+              </div>
+            </div>
+          </LiquidCard>
+        ))}
+      </div>
+    </div>
+  );
+}
