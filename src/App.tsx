@@ -7,6 +7,7 @@ import { CyberTerminalDrawer } from './components/CyberTerminalDrawer';
 import { PageBuilder } from './sanity/PageBuilder';
 import { getSanityPageData, DEFAULT_SANITY_PAGE_DATA, SanityPage } from './sanity/client';
 import { VisualEditingOverlay } from './sanity/VisualEditingOverlay';
+import { SanityVisualEditorBar } from './sanity/SanityVisualEditorBar';
 import { LabSettings, NavSection } from './types';
 
 export default function App() {
@@ -16,6 +17,7 @@ export default function App() {
   const [terminalCommand, setTerminalCommand] = useState<string>('');
   const [mousePos, setMousePos] = useState({ x: 0.5, y: 0.5 });
   const [pageData, setPageData] = useState<SanityPage>(DEFAULT_SANITY_PAGE_DATA);
+  const [isLoadingPage, setIsLoadingPage] = useState<boolean>(false);
 
   const [labSettings, setLabSettings] = useState<LabSettings>({
     geometry: 'crystalMatrix',
@@ -31,14 +33,22 @@ export default function App() {
   });
 
   // Load Sanity GROQ Page Builder Data
-  useEffect(() => {
-    async function loadPage() {
+  const refreshSanityData = async () => {
+    setIsLoadingPage(true);
+    try {
       const data = await getSanityPageData('home');
       if (data) {
         setPageData(data);
       }
+    } catch (err) {
+      console.error('Failed to load Sanity page data:', err);
+    } finally {
+      setIsLoadingPage(false);
     }
-    loadPage();
+  };
+
+  useEffect(() => {
+    refreshSanityData();
   }, []);
 
   // Track global normalized mouse position for 3D parallax

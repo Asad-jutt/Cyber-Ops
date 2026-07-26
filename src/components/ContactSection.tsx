@@ -30,6 +30,7 @@ import {
   GoogleSpreadsheetInfo
 } from '../utils/googleSheets';
 import { SanityContactBlock } from '../sanity/client';
+import { saveContactBriefToDatabase } from '../utils/firebase';
 
 const STORAGE_KEY_SHEET_ID = 'cyber_ops_sheet_id';
 const STORAGE_KEY_PENDING_ENQUIRIES = 'cyber_ops_pending_enquiries';
@@ -235,34 +236,44 @@ export function ContactSection({ data }: ContactSectionProps) {
 
     const fullRequirements = `[ROLE: ${form.contactRole}] [FOCUS: ${form.focusAreas.join(', ')}] [INFRASTRUCTURE: ${form.infrastructure}] [TIMELINE: ${form.timeline}] [URGENCY: ${form.urgency}] [COMPLIANCE: ${form.complianceMandates}] - Brief: ${form.message}`;
 
-    const auditRow = {
-      timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19) + ' UTC',
-      organization: `${form.organization} (${form.contactName})`,
-      email: form.email,
-      scopeBudget: form.budget,
-      requirements: fullRequirements,
-      status: 'TRIAGED (AI SOAR)'
-    };
-
-    const activeToken = token || getAccessToken();
-    const savedSheetId = sheetInfo?.spreadsheetId || localStorage.getItem(STORAGE_KEY_SHEET_ID);
-
-    let savedToGoogle = false;
-
-    if (activeToken && savedSheetId) {
-      try {
-        await appendAuditRowToSheet(activeToken, savedSheetId, auditRow);
-        savedToGoogle = true;
-      } catch (err: any) {
-        console.warn('Failed to append directly to sheet, storing pending:', err);
-      }
+    try {
+      // Save directly to backend Firestore database
+      await saveContactBriefToDatabase({
+        organization: form.organization,
+        contactName: form.contactName,
+        contactRole: form.contactRole,
+        email: form.email,
+        phoneOrSignal: form.phoneOrSignal,
+        focusAreas: form.focusAreas,
+        infrastructure: form.infrastructure,
+        budget: form.budget,
+        timeline: form.timeline,
+        urgency: form.urgency,
+        complianceMandates: form.complianceMandates,
+        message: form.message,
+        timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19) + ' UTC',
+        fullRequirements
+      });
+    } catch (err: any) {
+      console.warn('Database save attempt complete:', err);
     }
 
-    if (!savedToGoogle) {
-      // Store in pending queue to sync automatically when token is refreshed or available
-      const existing = JSON.parse(localStorage.getItem(STORAGE_KEY_PENDING_ENQUIRIES) || '[]');
-      existing.push(auditRow);
-      localStorage.setItem(STORAGE_KEY_PENDING_ENQUIRIES, JSON.stringify(existing));
+    // Also attempt Google Sheets append if connected
+    const activeToken = token || getAccessToken();
+    const savedSheetId = sheetInfo?.spreadsheetId || localStorage.getItem(STORAGE_KEY_SHEET_ID);
+    if (activeToken && savedSheetId) {
+      try {
+        await appendAuditRowToSheet(activeToken, savedSheetId, {
+          timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19) + ' UTC',
+          organization: `${form.organization} (${form.contactName})`,
+          email: form.email,
+          scopeBudget: form.budget,
+          requirements: fullRequirements,
+          status: 'TRIAGED (AI SOAR)'
+        });
+      } catch (err: any) {
+        console.warn('Sheet sync fallback:', err);
+      }
     }
 
     setSubmitted(true);
@@ -279,19 +290,6 @@ export function ContactSection({ data }: ContactSectionProps) {
               <Lock className="w-3.5 h-3.5" />
               <span>{badgeText}</span>
             </div>
-
-            {/* Owner Admin Config Button (Subtle gear icon for owner setup) */}
-            <button
-              onClick={() => {
-                sound.playClick();
-                setIsAdminModalOpen(true);
-              }}
-              className="p-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-cyan-300 hover:border-cyan-500/40 transition-all text-xs flex items-center gap-1.5 cursor-pointer"
-              title="Site Owner Google Sheets Database Setup"
-            >
-              <Settings className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline font-mono text-[10px]">OWNER DB SETUP</span>
-            </button>
           </div>
 
           <h2 className="text-4xl md:text-6xl font-black tracking-wider text-white uppercase font-sans leading-tight">
@@ -714,104 +712,6 @@ export function ContactSection({ data }: ContactSectionProps) {
           </div>
         </div>
       </div>
-
-      {/* Owner Admin Settings Modal */}
-      {isAdminModalOpen && (
-        <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
-          <div className="relative w-full max-w-lg bg-[#0b0f19] border border-cyan-500/40 p-6 sm:p-8 rounded-3xl shadow-[0_0_50px_rgba(0,240,255,0.25)] space-y-6 text-white font-mono">
-            <button
-              onClick={() => setIsAdminModalOpen(false)}
-              className="absolute top-6 right-6 p-2 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white cursor-pointer"
-            >
-              <X className="w-4 h-4" />
-            </button>
-
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-emerald-950/80 border border-emerald-400 flex items-center justify-center text-emerald-400">
-                <FileSpreadsheet className="w-5 h-5" />
-              </div>
-              <div>
-                <h4 className="text-sm font-bold text-white uppercase tracking-wider">
-                  SITE OWNER DATABASE CONFIG
-                </h4>
-                <p className="text-[10px] text-emerald-400">Google Sheets Form Enquiry Storage</p>
-              </div>
-            </div>
-
-            <p className="text-xs text-slate-300 leading-relaxed">
-              Connect your Google account here as the site administrator. Once connected, all form enquiries submitted by users on the website will be automatically logged into your personal Google Sheet.
-            </p>
-
-            {adminStatusMsg && (
-              <div className="p-3 rounded-xl bg-cyan-950/60 border border-cyan-500/30 text-cyan-300 text-xs">
-                {adminStatusMsg}
-              </div>
-            )}
-
-            {user ? (
-              <div className="space-y-4">
-                <div className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/10 text-xs">
-                  <div className="flex items-center gap-2">
-                    <img
-                      src={user.photoURL || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100'}
-                      alt="Owner"
-                      className="w-6 h-6 rounded-full border border-emerald-400"
-                    />
-                    <span className="font-bold text-white">{user.email}</span>
-                  </div>
-                  <button
-                    onClick={handleAdminSignOut}
-                    className="text-xs text-red-400 hover:underline cursor-pointer"
-                  >
-                    Disconnect
-                  </button>
-                </div>
-
-                {sheetInfo && (
-                  <div className="p-3 rounded-xl bg-emerald-950/40 border border-emerald-500/30 flex items-center justify-between gap-2 text-xs">
-                    <div>
-                      <div className="font-bold text-white">{sheetInfo.title}</div>
-                      <div className="text-[10px] text-slate-400">ID: {sheetInfo.spreadsheetId}</div>
-                    </div>
-                    <a
-                      href={sheetInfo.spreadsheetUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="px-3 py-1.5 rounded-lg bg-emerald-400 text-black font-bold text-xs flex items-center gap-1 cursor-pointer"
-                    >
-                      <span>OPEN SHEET</span>
-                      <ExternalLink className="w-3.5 h-3.5" />
-                    </a>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <button
-                onClick={handleAdminSignIn}
-                disabled={loading}
-                className="w-full py-3 rounded-xl bg-white text-slate-900 font-sans font-bold text-xs flex items-center justify-center gap-2 hover:bg-slate-100 transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)] cursor-pointer"
-              >
-                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" className="w-4 h-4">
-                  <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path>
-                  <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"></path>
-                  <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"></path>
-                  <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"></path>
-                </svg>
-                <span>CONNECT ADMIN GOOGLE ACCOUNT</span>
-              </button>
-            )}
-
-            <div className="pt-2 text-right">
-              <button
-                onClick={() => setIsAdminModalOpen(false)}
-                className="px-5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-bold cursor-pointer"
-              >
-                CLOSE
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </section>
   );
 }
