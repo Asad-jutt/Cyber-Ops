@@ -1,7 +1,7 @@
 import { createClient } from '@sanity/client';
 
 // Extract environment variables or use safe fallback values
-export const projectId = import.meta.env.VITE_SANITY_PROJECT_ID || 'cyber-ops-project';
+export const projectId = import.meta.env.VITE_SANITY_PROJECT_ID || '6tm6vd42';
 export const dataset = import.meta.env.VITE_SANITY_DATASET || 'production';
 export const apiVersion = import.meta.env.VITE_SANITY_API_VERSION || '2024-03-01';
 export const studioUrl = import.meta.env.VITE_SANITY_STUDIO_URL || 'http://localhost:3333';

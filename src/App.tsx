@@ -6,6 +6,7 @@ import { SearchModal } from './components/SearchModal';
 import { CyberTerminalDrawer } from './components/CyberTerminalDrawer';
 import { PageBuilder } from './sanity/PageBuilder';
 import { getSanityPageData, DEFAULT_SANITY_PAGE_DATA, SanityPage } from './sanity/client';
+import { VisualEditingOverlay } from './sanity/VisualEditingOverlay';
 import { LabSettings, NavSection } from './types';
 
 export default function App() {
@@ -116,6 +117,9 @@ export default function App() {
         initialCommand={terminalCommand}
         onNavigateSection={(sec) => handleNavigate(sec as NavSection)}
       />
+
+      {/* Sanity Live Visual Editing Overlay */}
+      <VisualEditingOverlay />
     </div>
   );
 }
