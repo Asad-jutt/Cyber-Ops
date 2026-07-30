@@ -10,7 +10,7 @@ interface FooterProps {
 export function Footer({ data }: FooterProps) {
   const [timeStr, setTimeStr] = useState('');
 
-  const copyrightText = data?.copyrightText || 'CYBER OPS // ZERO-TRUST CYBER ADVISORY © 2026';
+  const copyrightText = data?.copyrightNotice || data?.copyrightText || 'CYBER OPS // ZERO-TRUST CYBER ADVISORY © 2026';
 
   useEffect(() => {
     const updateClock = () => {

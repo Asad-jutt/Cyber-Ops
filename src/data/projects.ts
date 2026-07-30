@@ -1,9 +1,9 @@
 import { Project } from '../types';
 
-import imgQuantumVault from '../assets/images/quantum_encryption_vault_1785027160090.jpg';
-import imgSocCenter from '../assets/images/soc_command_center_1785027181641.jpg';
-import imgZeroTrust from '../assets/images/zero_trust_mesh_1785027200123.jpg';
-import imgPentestCore from '../assets/images/pentest_security_core_1785027212724.jpg';
+const imgQuantumVault = '/assets/images/quantum_encryption_vault_1785027160090.svg';
+const imgSocCenter = '/assets/images/soc_command_center_1785027181641.svg';
+const imgZeroTrust = '/assets/images/zero_trust_mesh_1785027200123.svg';
+const imgPentestCore = '/assets/images/pentest_security_core_1785027212724.svg';
 
 export const PROJECTS: Project[] = [
   {

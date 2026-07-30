@@ -12,6 +12,11 @@ interface SearchModalProps {
 
 export function SearchModal({ isOpen, onClose, onSelectProject, onNavigateSection }: SearchModalProps) {
   const [query, setQuery] = useState('');
+  const [failedImages, setFailedImages] = useState<Set<string>>(new Set());
+
+  const handleImageError = (id: string) => {
+    setFailedImages(prev => new Set(prev).add(id));
+  };
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -120,12 +125,19 @@ export function SearchModal({ isOpen, onClose, onSelectProject, onNavigateSectio
                     className="w-full flex items-center justify-between p-3 rounded-xl bg-white/5 hover:bg-cyan-500/10 border border-transparent hover:border-cyan-500/30 text-left transition-all cursor-pointer group"
                   >
                     <div className="flex items-center gap-3">
-                      <img
-                        src={p.image}
-                        alt={p.title}
-                        referrerPolicy="no-referrer"
-                        className="w-10 h-10 rounded-lg object-cover"
-                      />
+                      {failedImages.has(p.id) || !p.image ? (
+                        <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-900/40 via-purple-900/40 to-slate-900 flex items-center justify-center">
+                          <span className="text-slate-600 text-[10px] font-mono">404</span>
+                        </div>
+                      ) : (
+                        <img
+                          src={p.image}
+                          alt={p.title}
+                          referrerPolicy="no-referrer"
+                          onError={() => handleImageError(p.id)}
+                          className="w-10 h-10 rounded-lg object-cover"
+                        />
+                      )}
                       <div>
                         <div className="text-xs font-mono font-bold text-white group-hover:text-cyan-300">
                           {p.title}

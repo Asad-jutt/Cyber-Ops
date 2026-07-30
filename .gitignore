@@ -9,3 +9,6 @@ coverage/
 
 # ShipStudio metadata
 .shipstudio/
+
+# npm lockfile (project uses bun.lock)
+package-lock.json
