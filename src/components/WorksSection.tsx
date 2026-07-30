@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowUpRight, ShieldCheck, ExternalLink, X } from 'lucide-react';
+import { ArrowUpRight, ShieldCheck, ExternalLink, X, ImageOff } from 'lucide-react';
 import { Project } from '../types';
 import { PROJECTS } from '../data/projects';
 import { sound } from '../utils/audio';
@@ -15,6 +15,11 @@ interface WorksSectionProps {
 export function WorksSection({ data, onOpenLiveDemo }: WorksSectionProps) {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>('ALL');
+  const [failedImages, setFailedImages] = useState<Set<string>>(new Set());
+
+  const handleImageError = (id: string) => {
+    setFailedImages(prev => new Set(prev).add(id));
+  };
 
   const badgeText = data?.badgeText || 'CASE STUDIES // RECENT ENGAGEMENTS';
   const sectionTitle = data?.sectionTitle || 'CYBER DEFENSE ARCHIVE';
@@ -114,12 +119,19 @@ export function WorksSection({ data, onOpenLiveDemo }: WorksSectionProps) {
             <div>
               {/* Project Image Thumbnail */}
               <div className="relative aspect-video overflow-hidden bg-slate-900">
-                <img
-                  src={project.image}
-                  alt={project.title}
-                  referrerPolicy="no-referrer"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                />
+                {failedImages.has(project.id) || !project.image ? (
+                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-cyan-900/40 via-purple-900/40 to-slate-900">
+                    <ImageOff className="w-10 h-10 text-slate-600" />
+                  </div>
+                ) : (
+                  <img
+                    src={project.image}
+                    alt={project.title}
+                    referrerPolicy="no-referrer"
+                    onError={() => handleImageError(project.id)}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                  />
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0b0f19] via-transparent to-transparent opacity-80" />
                 
                 {/* Category Badge */}
@@ -188,12 +200,19 @@ export function WorksSection({ data, onOpenLiveDemo }: WorksSectionProps) {
 
             {/* Modal Image Header */}
             <div className="relative h-48 sm:h-64 md:h-80 w-full rounded-xl sm:rounded-2xl overflow-hidden mb-6 border border-white/10 bg-slate-900">
-              <img
-                src={selectedProject.image}
-                alt={selectedProject.title}
-                referrerPolicy="no-referrer"
-                className="w-full h-full object-cover"
-              />
+              {failedImages.has(selectedProject.id) || !selectedProject.image ? (
+                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-cyan-900/40 via-purple-900/40 to-slate-900">
+                  <ImageOff className="w-16 h-16 text-slate-600" />
+                </div>
+              ) : (
+                <img
+                  src={selectedProject.image}
+                  alt={selectedProject.title}
+                  referrerPolicy="no-referrer"
+                  onError={() => handleImageError(selectedProject.id)}
+                  className="w-full h-full object-cover"
+                />
+              )}
               <div className="absolute inset-0 bg-gradient-to-t from-[#0b0f19] via-[#0b0f19]/30 to-transparent opacity-90" />
               
               <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6">
