@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Sliders, RefreshCw, Cpu, Zap, Eye, Box, Shield, Lock } from 'lucide-react';
 import { LabSettings } from '../types';
 import { sound } from '../utils/audio';
+import { useSectionReveal } from '../utils/scrollReveal';
 import { SanityLabBlock } from '../sanity/client';
 
 interface LabSectionProps {
@@ -11,6 +12,8 @@ interface LabSectionProps {
 }
 
 export function LabSection({ data, labSettings, onUpdateSettings }: LabSectionProps) {
+  const sectionRef = useRef<HTMLElement>(null);
+  useSectionReveal(sectionRef, { stagger: 0.15, y: 60, start: 'top 85%' });
   const badgeText = data?.badgeText || 'WAR ROOM // THREAT VECTOR & ENCRYPTION SIMULATOR';
   const sectionTitle = data?.sectionTitle || 'WAR ROOM SIMULATOR';
 
@@ -86,7 +89,7 @@ export function LabSection({ data, labSettings, onUpdateSettings }: LabSectionPr
   ];
 
   return (
-    <section id="lab" className="relative z-10 py-24 px-6 md:px-12 lg:px-20 max-w-7xl mx-auto">
+    <section ref={sectionRef} id="lab" className="relative z-10 py-24 px-6 md:px-12 lg:px-20 max-w-7xl mx-auto">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 border-b border-white/10 pb-8 gap-6">
         <div>

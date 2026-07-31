@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { ArrowUpRight, ShieldCheck, ExternalLink, X, ImageOff } from 'lucide-react';
 import { Project } from '../types';
 import { PROJECTS } from '../data/projects';
 import { sound } from '../utils/audio';
+import { useSectionReveal } from '../utils/scrollReveal';
 import { LiquidCard } from './LiquidCard';
 import { SanityWorksBlock } from '../sanity/client';
 import { urlFor } from '../sanity/image';
@@ -13,6 +14,8 @@ interface WorksSectionProps {
 }
 
 export function WorksSection({ data, onOpenLiveDemo }: WorksSectionProps) {
+  const sectionRef = useRef<HTMLElement>(null);
+  useSectionReveal(sectionRef, { stagger: 0.15, y: 60, start: 'top 85%' });
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>('ALL');
   const [failedImages, setFailedImages] = useState<Set<string>>(new Set());
@@ -71,7 +74,7 @@ export function WorksSection({ data, onOpenLiveDemo }: WorksSectionProps) {
   };
 
   return (
-    <section id="work" className="relative z-10 py-24 px-6 md:px-12 lg:px-20 max-w-7xl mx-auto">
+    <section ref={sectionRef} id="work" className="relative z-10 py-24 px-6 md:px-12 lg:px-20 max-w-7xl mx-auto">
       {/* Section Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 border-b border-white/10 pb-8 gap-6">
         <div>

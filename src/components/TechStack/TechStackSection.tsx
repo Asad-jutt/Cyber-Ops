@@ -1,8 +1,8 @@
-import React, { useEffect, useRef } from 'react';
-import gsap from 'gsap';
+import React, { useRef } from 'react';
 import { CapabilityCard } from './CapabilityCard';
 import { GlowingButton } from './GlowingButton';
 import { Cpu } from 'lucide-react';
+import { useSectionReveal } from '../../utils/scrollReveal';
 import { SanityTechStackBlock } from '../../sanity/client';
 
 interface TechStackSectionProps {
@@ -11,61 +11,13 @@ interface TechStackSectionProps {
 }
 
 export function TechStackSection({ data, onExploreServices }: TechStackSectionProps) {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const titleRef = useRef<HTMLDivElement>(null);
-  const cardsRef = useRef<HTMLDivElement>(null);
-  const buttonRef = useRef<HTMLDivElement>(null);
-
+  const sectionRef = useRef<HTMLElement>(null);
+  useSectionReveal(sectionRef, { stagger: 0.15, y: 60, start: 'top 85%' });
   const badgeText = data?.badgeText || 'CORE CAPABILITIES // DEFENSE SUITE';
   const sectionTitle = data?.sectionTitle || 'MILITARY-GRADE CYBER ENGINE';
   const subtitle =
     data?.subtitle ||
     'FORTIFYING HYBRID MULTI-CLOUD INFRASTRUCTURES THROUGH AUTOMATED THREAT HUNTING, SECURE MESH ARCHITECTURE, AND POST-QUANTUM CRYPTOGRAPHY.';
-
-  // GSAP Stagger Entrance Animation
-  useEffect(() => {
-    if (!sectionRef.current) return;
-
-    const tl = gsap.timeline({
-      paused: true,
-      defaults: { ease: 'power3.out' }
-    });
-
-    tl.fromTo(
-      titleRef.current,
-      { opacity: 0, y: 30, filter: 'blur(10px)' },
-      { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1.0 }
-    )
-      .fromTo(
-        Array.from(cardsRef.current?.children || []),
-        { opacity: 0, y: 40, scale: 0.95 },
-        { opacity: 1, y: 0, scale: 1, duration: 0.8, stagger: 0.15 },
-        '-=0.5'
-      )
-      .fromTo(
-        buttonRef.current,
-        { opacity: 0, y: 20, scale: 0.9 },
-        { opacity: 1, y: 0, scale: 1, duration: 0.8 },
-        '-=0.4'
-      );
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          tl.play();
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.15 }
-    );
-
-    observer.observe(sectionRef.current);
-
-    return () => {
-      observer.disconnect();
-      tl.kill();
-    };
-  }, [sectionTitle]);
 
   return (
     <section
@@ -74,7 +26,7 @@ export function TechStackSection({ data, onExploreServices }: TechStackSectionPr
       className="relative z-10 py-24 px-6 md:px-12 lg:px-20 max-w-7xl mx-auto"
     >
       {/* Section Header */}
-      <div ref={titleRef} className="flex flex-col md:flex-row md:items-end justify-between mb-12 border-b border-white/10 pb-8 gap-6">
+      <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 border-b border-white/10 pb-8 gap-6">
         <div>
           <div className="flex items-center gap-2 text-cyan-400 font-mono text-xs tracking-[0.25em] mb-2 uppercase">
             <Cpu className="w-3.5 h-3.5" />
@@ -92,7 +44,6 @@ export function TechStackSection({ data, onExploreServices }: TechStackSectionPr
 
       {/* Grid of Capability Cards */}
       <div
-        ref={cardsRef}
         className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full mb-12"
       >
         {data?.capabilities && data.capabilities.length > 0 ? (
@@ -145,7 +96,7 @@ export function TechStackSection({ data, onExploreServices }: TechStackSectionPr
       </div>
 
       {/* CTA Button */}
-      <div ref={buttonRef} className="flex justify-center pt-4">
+      <div className="flex justify-center pt-4">
         <GlowingButton label="REQUEST THREAT BRIEF" onClick={onExploreServices} />
       </div>
     </section>

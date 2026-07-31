@@ -1,6 +1,5 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { ArrowUpRight, ShieldCheck, Cpu, Lock, ShieldAlert } from 'lucide-react';
-import gsap from 'gsap';
 import { sound } from '../utils/audio';
 import { LiquidCard } from './LiquidCard';
 import { SanityHeroBlock } from '../sanity/client';
@@ -12,13 +11,6 @@ interface HeroContentProps {
 }
 
 export function HeroContent({ data, onBeginExploration, onOpenLab }: HeroContentProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const titleRef = useRef<HTMLHeadingElement>(null);
-  const subtitleRef = useRef<HTMLDivElement>(null);
-  const descRef = useRef<HTMLParagraphElement>(null);
-  const buttonsRef = useRef<HTMLDivElement>(null);
-  const badgesRef = useRef<HTMLDivElement>(null);
-
   const statusBadge = data?.statusBadge || 'SYSTEM STATUS // ALL SYSTEMS HARDENED';
   const headlinePrimary = data?.headlinePrimary || 'ZERO-TRUST ARCHITECTURE &';
   const headlineAccent = data?.headlineAccent || 'QUANTUM-RESISTANT CYBER OPS';
@@ -28,52 +20,12 @@ export function HeroContent({ data, onBeginExploration, onOpenLab }: HeroContent
   const ctaPrimaryText = data?.ctaPrimaryText || 'INITIATE THREAT AUDIT';
   const ctaSecondaryText = data?.ctaSecondaryText || 'SIMULATE WAR ROOM';
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-
-      tl.fromTo(
-        subtitleRef.current,
-        { opacity: 0, y: -20 },
-        { opacity: 1, y: 0, duration: 0.8 }
-      )
-        .fromTo(
-          titleRef.current,
-          { opacity: 0, y: 40, scale: 0.95, filter: 'blur(10px)' },
-          { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)', duration: 1.2 },
-          '-=0.4'
-        )
-        .fromTo(
-          descRef.current,
-          { opacity: 0, y: 20 },
-          { opacity: 1, y: 0, duration: 0.8 },
-          '-=0.6'
-        )
-        .fromTo(
-          buttonsRef.current,
-          { opacity: 0, y: 20 },
-          { opacity: 1, y: 0, duration: 0.8 },
-          '-=0.5'
-        )
-        .fromTo(
-          badgesRef.current,
-          { opacity: 0, scale: 0.9 },
-          { opacity: 1, scale: 1, duration: 0.8 },
-          '-=0.5'
-        );
-    }, containerRef);
-
-    return () => ctx.revert();
-  }, [headlinePrimary, headlineAccent]);
-
   return (
     <div
-      ref={containerRef}
       className="relative z-10 flex flex-col justify-center min-h-screen px-6 md:px-12 lg:px-20 pt-24 pb-12 max-w-5xl pointer-events-none"
     >
       {/* Subtitle / Eyebrow */}
       <div
-        ref={subtitleRef}
         className="flex items-center gap-2 mb-4 pointer-events-auto"
       >
         <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-cyan-950/70 border border-cyan-500/40 text-cyan-400 text-xs font-mono tracking-[0.2em] shadow-[0_0_20px_rgba(0,240,255,0.25)] uppercase">
@@ -84,7 +36,6 @@ export function HeroContent({ data, onBeginExploration, onOpenLab }: HeroContent
 
       {/* Main Hero Headline (Heading only) */}
       <h1
-        ref={titleRef}
         className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-white uppercase leading-[0.95] mb-6 drop-shadow-[0_0_35px_rgba(0,240,255,0.2)] font-sans"
       >
         {headlinePrimary} <br />
@@ -95,7 +46,6 @@ export function HeroContent({ data, onBeginExploration, onOpenLab }: HeroContent
 
       {/* Description */}
       <p
-        ref={descRef}
         className="text-slate-300 text-sm sm:text-base md:text-lg max-w-2xl font-mono leading-relaxed mb-8 tracking-wide text-balance"
       >
         {subheadline}
@@ -103,7 +53,6 @@ export function HeroContent({ data, onBeginExploration, onOpenLab }: HeroContent
 
       {/* Action Buttons */}
       <div
-        ref={buttonsRef}
         className="flex flex-wrap items-center gap-4 mb-12 pointer-events-auto"
       >
         {/* Initiate Threat Audit Button */}
@@ -143,7 +92,6 @@ export function HeroContent({ data, onBeginExploration, onOpenLab }: HeroContent
 
       {/* Technical Badges with Liquid Shader Cards */}
       <div
-        ref={badgesRef}
         className="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-3xl pointer-events-auto"
       >
         {(data?.statPills || [

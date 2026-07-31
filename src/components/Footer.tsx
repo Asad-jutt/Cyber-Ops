@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Shield, ArrowUp } from 'lucide-react';
 import { sound } from '../utils/audio';
+import { useSectionReveal } from '../utils/scrollReveal';
 import { SanityFooterBlock } from '../sanity/client';
 
 interface FooterProps {
@@ -8,6 +9,8 @@ interface FooterProps {
 }
 
 export function Footer({ data }: FooterProps) {
+  const footerRef = useRef<HTMLElement>(null);
+  useSectionReveal(footerRef, { y: 40, blur: 8, duration: 0.9, stagger: 0.1, start: 'top 95%' });
   const [timeStr, setTimeStr] = useState('');
 
   const copyrightText = data?.copyrightNotice || data?.copyrightText || 'CYBER OPS // ZERO-TRUST CYBER ADVISORY © 2026';
@@ -28,7 +31,7 @@ export function Footer({ data }: FooterProps) {
   };
 
   return (
-    <footer className="relative z-10 border-t border-white/10 bg-[#0b0f19] py-12 px-6 md:px-12 lg:px-20 text-slate-400 font-mono text-xs">
+    <footer ref={footerRef} className="relative z-10 border-t border-white/10 bg-[#0b0f19] py-12 px-6 md:px-12 lg:px-20 text-slate-400 font-mono text-xs">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
         {/* Brand & Copyright */}
         <div className="flex items-center gap-3">

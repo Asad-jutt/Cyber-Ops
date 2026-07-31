@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Send,
   CheckCircle2,
@@ -31,6 +31,7 @@ import {
 } from '../utils/googleSheets';
 import { SanityContactBlock } from '../sanity/client';
 import { saveContactBriefToDatabase } from '../utils/firebase';
+import { useSectionReveal } from '../utils/scrollReveal';
 
 const STORAGE_KEY_SHEET_ID = 'cyber_ops_sheet_id';
 const STORAGE_KEY_PENDING_ENQUIRIES = 'cyber_ops_pending_enquiries';
@@ -40,6 +41,8 @@ interface ContactSectionProps {
 }
 
 export function ContactSection({ data }: ContactSectionProps) {
+  const sectionRef = useRef<HTMLElement>(null);
+  useSectionReveal(sectionRef, { stagger: 0.15, y: 60, start: 'top 85%' });
   const badgeText = data?.badgeText || 'INITIATE SECURITY DISCOVERY';
   const sectionTitle = data?.sectionTitle || 'INITIATE CYBER AUDIT';
   const emailAddress = data?.email || 'cyberops@gmail.com';
@@ -281,7 +284,7 @@ export function ContactSection({ data }: ContactSectionProps) {
   };
 
   return (
-    <section id="contact" className="relative z-10 py-24 px-6 md:px-12 lg:px-20 max-w-7xl mx-auto space-y-12">
+    <section ref={sectionRef} id="contact" className="relative z-10 py-24 px-6 md:px-12 lg:px-20 max-w-7xl mx-auto space-y-12">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
         {/* Left Column: Info Header */}
         <div className="space-y-6">

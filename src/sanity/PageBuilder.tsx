@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import {
   SanityPage,
   SanityHeroBlock,
@@ -18,7 +18,31 @@ import { AboutSection } from '../components/AboutSection';
 import { ContactSection } from '../components/ContactSection';
 import { Footer } from '../components/Footer';
 import { LiquidCard } from '../components/LiquidCard';
+import { useSectionReveal } from '../utils/scrollReveal';
 import { LabSettings, NavSection } from '../types';
+
+function ShaderSection({ data }: { data: SanityShaderSectionBlock }) {
+  const sectionRef = useRef<HTMLElement>(null);
+  useSectionReveal(sectionRef, { y: 40, blur: 8, duration: 0.9, start: 'top 85%' });
+
+  return (
+    <section ref={sectionRef} className="py-16 px-4 md:px-8 max-w-7xl mx-auto">
+      <LiquidCard
+        color1={data.color1 || '#00f0ff'}
+        color2={data.color2 || '#d946ef'}
+        className="rounded-3xl p-8 bg-black/60 border border-cyan-500/30 backdrop-blur-xl text-center space-y-4"
+      >
+        <h3 className="text-2xl md:text-3xl font-mono font-bold text-white tracking-wider">
+          {data.title || 'QUANTUM FLUID FIELD VISUALIZER'}
+        </h3>
+        <p className="text-sm font-mono text-cyan-300/80 max-w-2xl mx-auto">
+          {data.description ||
+            'Interactive WebGL fluid simulation powered by custom fragment shaders depicting real-time encryption entropy.'}
+        </p>
+      </LiquidCard>
+    </section>
+  );
+}
 
 interface PageBuilderProps {
   pageData: SanityPage;
@@ -101,23 +125,7 @@ export function PageBuilder({
 
           case 'shaderSectionBlock': {
             const shaderData = block as SanityShaderSectionBlock;
-            return (
-              <section key={key} className="py-16 px-4 md:px-8 max-w-7xl mx-auto">
-                <LiquidCard
-                  color1={shaderData.color1 || '#00f0ff'}
-                  color2={shaderData.color2 || '#d946ef'}
-                  className="rounded-3xl p-8 bg-black/60 border border-cyan-500/30 backdrop-blur-xl text-center space-y-4"
-                >
-                  <h3 className="text-2xl md:text-3xl font-mono font-bold text-white tracking-wider">
-                    {shaderData.title || 'QUANTUM FLUID FIELD VISUALIZER'}
-                  </h3>
-                  <p className="text-sm font-mono text-cyan-300/80 max-w-2xl mx-auto">
-                    {shaderData.description ||
-                      'Interactive WebGL fluid simulation powered by custom fragment shaders depicting real-time encryption entropy.'}
-                  </p>
-                </LiquidCard>
-              </section>
-            );
+            return <ShaderSection key={key} data={shaderData} />;
           }
 
           case 'footerBlock': {

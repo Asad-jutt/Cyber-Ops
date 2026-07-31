@@ -299,7 +299,7 @@ export const DEFAULT_SANITY_PAGE_DATA: SanityPage = {
   ],
 };
 
-const LATEST_PAGE_GROQ = `*[_type == "page"] | order(_createdAt asc)[0]{
+const LATEST_PAGE_GROQ = `*[_type == "page"] | order(_updatedAt desc)[0]{
   title,
   slug,
   globalTheme,

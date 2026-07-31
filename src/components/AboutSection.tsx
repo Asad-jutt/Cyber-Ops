@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ShieldCheck, Shield, Lock, ShieldAlert, Activity } from 'lucide-react';
 import { sound } from '../utils/audio';
+import { useSectionReveal } from '../utils/scrollReveal';
 import { LiquidCard } from './LiquidCard';
 import { SanityAboutBlock } from '../sanity/client';
 
@@ -224,6 +225,8 @@ interface AboutSectionProps {
 }
 
 export function AboutSection({ data }: AboutSectionProps) {
+  const sectionRef = useRef<HTMLElement>(null);
+  useSectionReveal(sectionRef, { stagger: 0.15, y: 60, start: 'top 85%' });
   const badgeText = data?.badgeText || 'PHILOSOPHY // ZERO-TRUST MANIFESTO';
   const sectionTitle = data?.sectionTitle || 'IMPERVIOUS DEFENSE THROUGH ZERO-TRUST & POST-QUANTUM INTELLIGENCE';
 
@@ -270,7 +273,7 @@ export function AboutSection({ data }: AboutSectionProps) {
   ];
 
   return (
-    <section id="about" className="relative z-10 py-24 px-6 md:px-12 lg:px-20 max-w-7xl mx-auto">
+    <section ref={sectionRef} id="about" className="relative z-10 py-24 px-6 md:px-12 lg:px-20 max-w-7xl mx-auto">
       {/* Section Header */}
       <div className="mb-16 border-b border-white/10 pb-8">
         <div className="flex items-center gap-2 text-cyan-400 font-mono text-xs tracking-[0.25em] mb-2 uppercase">

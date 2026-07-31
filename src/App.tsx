@@ -34,6 +34,7 @@ export default function App() {
   // Load Sanity GROQ Page Builder Data
   const refreshSanityData = async () => {
     setIsLoadingPage(true);
+    const startedAt = Date.now();
     try {
       const data = await getSanityPageData('home');
       const isFallback = JSON.stringify(data) === JSON.stringify(DEFAULT_SANITY_PAGE_DATA);
@@ -46,7 +47,8 @@ export default function App() {
       console.error('Failed to load Sanity page data:', err);
       setPageData(DEFAULT_SANITY_PAGE_DATA);
     } finally {
-      setIsLoadingPage(false);
+      const remaining = Math.max(0, 1000 - (Date.now() - startedAt));
+      setTimeout(() => setIsLoadingPage(false), remaining);
     }
   };
 
@@ -103,7 +105,16 @@ export default function App() {
       </div>
 
       {/* Dynamic Page Builder Stream */}
-      {pageData ? (
+      {!pageData || isLoadingPage ? (
+        <main className="relative z-10 pt-20">
+          <div className="flex min-h-[60vh] items-center justify-center">
+            <div className="space-y-4 text-center">
+              <div className="mx-auto h-10 w-10 animate-spin rounded-full border-2 border-cyan-400 border-t-transparent" />
+              <p className="font-mono text-xs tracking-widest text-cyan-300/80">Loading</p>
+            </div>
+          </div>
+        </main>
+      ) : (
         <main className="relative z-10 pt-20">
           <PageBuilder
             pageData={pageData}
@@ -112,17 +123,6 @@ export default function App() {
             onNavigateSection={handleNavigate}
             onOpenTerminalWithCommand={handleOpenTerminalWithCommand}
           />
-        </main>
-      ) : (
-        <main className="relative z-10 pt-20">
-          <div className="flex min-h-[60vh] items-center justify-center">
-            <div className="space-y-4 text-center">
-              <div className="mx-auto h-10 w-10 animate-spin rounded-full border-2 border-cyan-400 border-t-transparent" />
-              <p className="font-mono text-xs tracking-widest text-cyan-300/80">
-                SYNCING SANITY CMS DATA...
-              </p>
-            </div>
-          </div>
         </main>
       )}
 
