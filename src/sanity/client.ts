@@ -299,12 +299,47 @@ export const DEFAULT_SANITY_PAGE_DATA: SanityPage = {
   ],
 };
 
+const LATEST_PAGE_GROQ = `*[_type == "page"] | order(_createdAt asc)[0]{
+  title,
+  slug,
+  globalTheme,
+  seo,
+  navigation,
+  blocks[]{
+    ...,
+    _type == "worksBlock" => {
+      ...,
+      projects[]{
+        ...,
+        "imageUrl": mainImage.asset->url
+      }
+    }
+  }
+}`;
+
+// Merge fetched Sanity blocks with default blocks for any section missing
+// from the CMS, so the page always renders completely.
+function mergeMissingBlocks(fetched: SanityPage): SanityPage {
+  const fetchedTypes = new Set((fetched.blocks || []).map((b) => b._type));
+  const missingDefaults = DEFAULT_SANITY_PAGE_DATA.blocks.filter(
+    (b) => !fetchedTypes.has(b._type)
+  );
+  return {
+    ...fetched,
+    blocks: [...(fetched.blocks || []), ...missingDefaults],
+  };
+}
+
 // Async Page Loader with Fallback
 export async function getSanityPageData(slug = 'home'): Promise<SanityPage> {
   try {
     const data = await sanityClient.fetch<SanityPage>(PAGE_BUILDER_GROQ, { slug });
     if (data && data.blocks && data.blocks.length > 0) {
-      return data;
+      return mergeMissingBlocks(data);
+    }
+    const latest = await sanityClient.fetch<SanityPage>(LATEST_PAGE_GROQ);
+    if (latest && latest.blocks && latest.blocks.length > 0) {
+      return mergeMissingBlocks(latest);
     }
   } catch (err) {
     console.warn('Sanity Client fetch info (using fallback schema data):', err);
