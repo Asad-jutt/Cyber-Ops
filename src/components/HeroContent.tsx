@@ -105,6 +105,7 @@ export function HeroContent({ data, onBeginExploration, onOpenLab }: HeroContent
           return (
             <LiquidCard
               key={idx}
+              disableShader
               className="rounded-xl bg-black/50 border border-white/10 backdrop-blur-md hover:border-cyan-500/40 transition-colors"
             >
               <div className="p-3.5">
