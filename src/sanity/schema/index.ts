@@ -7,9 +7,11 @@ import { aboutBlock } from './blocks/aboutBlock';
 import { contactBlock } from './blocks/contactBlock';
 import { shaderSectionBlock } from './blocks/shaderSectionBlock';
 import { footerBlock } from './blocks/footerBlock';
+import { siteSettingsSchema } from './siteSettings';
 
 export const schemaTypes = [
   pageSchema,
+  siteSettingsSchema,
   heroBlock,
   worksBlock,
   techStackBlock,

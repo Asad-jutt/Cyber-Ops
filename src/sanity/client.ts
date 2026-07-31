@@ -4,14 +4,15 @@ import { createClient } from '@sanity/client';
 export const projectId = import.meta.env.VITE_SANITY_PROJECT_ID || '6tm6vd42';
 export const dataset = import.meta.env.VITE_SANITY_DATASET || 'production';
 export const apiVersion = import.meta.env.VITE_SANITY_API_VERSION || '2024-03-01';
-export const studioUrl = import.meta.env.VITE_SANITY_STUDIO_URL || 'http://localhost:3333';
+export const studioUrl = import.meta.env.VITE_SANITY_STUDIO_URL || 'https://cyberops.sanity.studio';
 
 // Configure Sanity Client with Stega enabled for visual click-to-edit overlays
+// useCdn must be false for stega encoding to work (CDN strips metadata)
 export const sanityClient = createClient({
   projectId,
   dataset,
   apiVersion,
-  useCdn: true,
+  useCdn: false,
   stega: {
     enabled: true,
     studioUrl,
@@ -282,7 +283,8 @@ export const DEFAULT_SANITY_PAGE_DATA: SanityPage = {
       sectionTitle: 'COMMISSION A COMPREHENSIVE CYBERSECURITY AUDIT',
       subtext:
         'Ready to fortify your enterprise infrastructure against nation-state APTs and quantum decryption threats? Complete our 4-step confidential audit wizard below for immediate triage by our principal architects.',
-      directEmail: 'triage@cyberops.sec',
+      directEmail: 'cyberops@gmail.com',
+      email: 'cyberops@gmail.com',
       pgpFingerprint: '4F8A 9B2C 11E3 D09A 7782 559C 3341 A10B 9901 882E',
     },
     {

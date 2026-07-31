@@ -7,7 +7,6 @@ import { CyberTerminalDrawer } from './components/CyberTerminalDrawer';
 import { PageBuilder } from './sanity/PageBuilder';
 import { getSanityPageData, DEFAULT_SANITY_PAGE_DATA, SanityPage } from './sanity/client';
 import { VisualEditingOverlay } from './sanity/VisualEditingOverlay';
-import { SanityVisualEditorBar } from './sanity/SanityVisualEditorBar';
 import { LabSettings, NavSection } from './types';
 
 export default function App() {

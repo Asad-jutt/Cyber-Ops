@@ -42,7 +42,7 @@ interface ContactSectionProps {
 export function ContactSection({ data }: ContactSectionProps) {
   const badgeText = data?.badgeText || 'INITIATE SECURITY DISCOVERY';
   const sectionTitle = data?.sectionTitle || 'INITIATE CYBER AUDIT';
-  const emailAddress = data?.email || 'sec-ops@cyberops-defense.com';
+  const emailAddress = data?.email || 'cyberops@gmail.com';
   const phoneOrHotline = data?.phone || '24/7 INCIDENT HOTLINE // PGP ENCRYPTED';
 
   const [currentStep, setCurrentStep] = useState<number>(1);

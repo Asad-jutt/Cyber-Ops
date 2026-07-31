@@ -30,4 +30,10 @@ export const shaderSectionBlock = {
       initialValue: '#d946ef',
     },
   ],
+  preview: {
+    select: { title: 'title' },
+    prepare({ title }: { title?: string }) {
+      return { title: title || 'Shader Feature Block' };
+    },
+  },
 };
