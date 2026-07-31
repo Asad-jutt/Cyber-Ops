@@ -133,6 +133,7 @@ export function WorksSection({ data, onOpenLiveDemo }: WorksSectionProps) {
                   />
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0b0f19] via-transparent to-transparent opacity-80" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0b0f19] via-transparent to-transparent opacity-80 ss-div-f8b5" />
                 
                 {/* Category Badge */}
                 <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md border border-cyan-500/30 text-[10px] font-mono text-cyan-300 tracking-widest uppercase">

@@ -1,0 +1,20 @@
+{
+	"pid": 22344,
+	"port": 3989,
+	"url": "http://localhost:3989",
+	"urls": {
+		"local": [
+			"http://localhost:3989/"
+		],
+		"network": [
+			"http://192.168.56.1:3989/",
+			"http://192.168.0.101:3989/"
+		],
+		"networkInterfaceNames": [
+			"Ethernet 2",
+			"Wi-Fi"
+		]
+	},
+	"background": false,
+	"startedAt": "2026-07-31T00:49:16.994Z"
+}
