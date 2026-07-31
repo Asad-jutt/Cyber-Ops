@@ -9,17 +9,13 @@ import { getSanityPageData, DEFAULT_SANITY_PAGE_DATA, SanityPage } from './sanit
 import { VisualEditingOverlay } from './sanity/VisualEditingOverlay';
 import { LabSettings, NavSection } from './types';
 
-interface AppProps {
-  initialPageData?: SanityPage;
-}
-
-export default function App({ initialPageData }: AppProps) {
+export default function App() {
   const [activeSection, setActiveSection] = useState<NavSection>('home');
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
   const [isTerminalOpen, setIsTerminalOpen] = useState<boolean>(false);
   const [terminalCommand, setTerminalCommand] = useState<string>('');
   const [mousePos, setMousePos] = useState({ x: 0.5, y: 0.5 });
-  const [pageData, setPageData] = useState<SanityPage>(initialPageData || DEFAULT_SANITY_PAGE_DATA);
+  const [pageData, setPageData] = useState<SanityPage | null>(null);
   const [isLoadingPage, setIsLoadingPage] = useState<boolean>(false);
 
   const [labSettings, setLabSettings] = useState<LabSettings>({
@@ -43,9 +39,12 @@ export default function App({ initialPageData }: AppProps) {
       const isFallback = JSON.stringify(data) === JSON.stringify(DEFAULT_SANITY_PAGE_DATA);
       if (data && !isFallback) {
         setPageData(data);
+      } else {
+        setPageData(DEFAULT_SANITY_PAGE_DATA);
       }
     } catch (err) {
       console.error('Failed to load Sanity page data:', err);
+      setPageData(DEFAULT_SANITY_PAGE_DATA);
     } finally {
       setIsLoadingPage(false);
     }
@@ -104,15 +103,28 @@ export default function App({ initialPageData }: AppProps) {
       </div>
 
       {/* Dynamic Page Builder Stream */}
-      <main className="relative z-10 pt-20">
-        <PageBuilder
-          pageData={pageData}
-          labSettings={labSettings}
-          onUpdateLabSettings={(newSettings) => setLabSettings(newSettings)}
-          onNavigateSection={handleNavigate}
-          onOpenTerminalWithCommand={handleOpenTerminalWithCommand}
-        />
-      </main>
+      {pageData ? (
+        <main className="relative z-10 pt-20">
+          <PageBuilder
+            pageData={pageData}
+            labSettings={labSettings}
+            onUpdateLabSettings={(newSettings) => setLabSettings(newSettings)}
+            onNavigateSection={handleNavigate}
+            onOpenTerminalWithCommand={handleOpenTerminalWithCommand}
+          />
+        </main>
+      ) : (
+        <main className="relative z-10 pt-20">
+          <div className="flex min-h-[60vh] items-center justify-center">
+            <div className="space-y-4 text-center">
+              <div className="mx-auto h-10 w-10 animate-spin rounded-full border-2 border-cyan-400 border-t-transparent" />
+              <p className="font-mono text-xs tracking-widest text-cyan-300/80">
+                SYNCING SANITY CMS DATA...
+              </p>
+            </div>
+          </div>
+        </main>
+      )}
 
       {/* Search Overlay */}
       <SearchModal
