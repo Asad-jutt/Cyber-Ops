@@ -10,6 +10,16 @@ interface Hero3DCanvasProps {
   mousePosition?: { x: number; y: number };
 }
 
+// Deterministic seeded PRNG so the 3D scene renders identically on every load
+function mulberry32(seed: number) {
+  return function () {
+    let t = (seed += 0x6d2b79f5);
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
 // Default lab settings if not provided
 const defaultSettings: LabSettings = {
   geometry: 'crystalMatrix',
@@ -118,14 +128,15 @@ function OrbitingShards({ primaryColor, accentColor }: { primaryColor: string; a
   const groupRef = useRef<THREE.Group>(null);
 
   const shardData = useMemo(() => {
+    const rng = mulberry32(1337);
     const shards = [];
     const count = 14;
     for (let i = 0; i < count; i++) {
       const angle = (i / count) * Math.PI * 2;
-      const radius = 3.2 + Math.random() * 2.0;
-      const yOffset = (Math.random() - 0.5) * 2.2;
-      const scale = 0.12 + Math.random() * 0.2;
-      const speed = (0.2 + Math.random() * 0.3) * (i % 2 === 0 ? 1 : -1);
+      const radius = 3.2 + rng() * 2.0;
+      const yOffset = (rng() - 0.5) * 2.2;
+      const scale = 0.12 + rng() * 0.2;
+      const speed = (0.2 + rng() * 0.3) * (i % 2 === 0 ? 1 : -1);
       const isPrimary = i % 2 === 0;
       shards.push({ angle, radius, yOffset, scale, speed, isPrimary });
     }
@@ -183,6 +194,7 @@ function ParticleField({ count = 1000, primaryColor, accentColor }: { count: num
   const safeCount = Math.min(count, 1200);
 
   const [positions, colors] = useMemo(() => {
+    const rng = mulberry32(4242);
     const pos = new Float32Array(safeCount * 3);
     const col = new Float32Array(safeCount * 3);
     const color1 = new THREE.Color(primaryColor);
@@ -190,15 +202,15 @@ function ParticleField({ count = 1000, primaryColor, accentColor }: { count: num
     const color3 = new THREE.Color('#ffffff');
 
     for (let i = 0; i < safeCount; i++) {
-      const radius = 2 + Math.random() * 10;
-      const theta = Math.random() * Math.PI * 2;
-      const phi = Math.acos((Math.random() * 2) - 1);
+      const radius = 2 + rng() * 10;
+      const theta = rng() * Math.PI * 2;
+      const phi = Math.acos((rng() * 2) - 1);
 
       pos[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
-      pos[i * 3 + 1] = (Math.random() - 0.5) * 8;
+      pos[i * 3 + 1] = (rng() - 0.5) * 8;
       pos[i * 3 + 2] = radius * Math.sin(phi) * Math.sin(theta);
 
-      const rand = Math.random();
+      const rand = rng();
       const mixedColor = rand < 0.6 ? color1 : rand < 0.9 ? color2 : color3;
       col[i * 3] = mixedColor.r;
       col[i * 3 + 1] = mixedColor.g;

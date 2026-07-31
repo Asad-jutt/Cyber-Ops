@@ -9,13 +9,17 @@ import { getSanityPageData, DEFAULT_SANITY_PAGE_DATA, SanityPage } from './sanit
 import { VisualEditingOverlay } from './sanity/VisualEditingOverlay';
 import { LabSettings, NavSection } from './types';
 
-export default function App() {
+interface AppProps {
+  initialPageData?: SanityPage;
+}
+
+export default function App({ initialPageData }: AppProps) {
   const [activeSection, setActiveSection] = useState<NavSection>('home');
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
   const [isTerminalOpen, setIsTerminalOpen] = useState<boolean>(false);
   const [terminalCommand, setTerminalCommand] = useState<string>('');
   const [mousePos, setMousePos] = useState({ x: 0.5, y: 0.5 });
-  const [pageData, setPageData] = useState<SanityPage>(DEFAULT_SANITY_PAGE_DATA);
+  const [pageData, setPageData] = useState<SanityPage>(initialPageData || DEFAULT_SANITY_PAGE_DATA);
   const [isLoadingPage, setIsLoadingPage] = useState<boolean>(false);
 
   const [labSettings, setLabSettings] = useState<LabSettings>({
@@ -36,7 +40,8 @@ export default function App() {
     setIsLoadingPage(true);
     try {
       const data = await getSanityPageData('home');
-      if (data) {
+      const isFallback = JSON.stringify(data) === JSON.stringify(DEFAULT_SANITY_PAGE_DATA);
+      if (data && !isFallback) {
         setPageData(data);
       }
     } catch (err) {
@@ -94,7 +99,7 @@ export default function App() {
 
       {/* 3D WebGL Canvas Layer (Fixed Background for Hero) */}
       <div className="fixed inset-0 z-0 pointer-events-none opacity-80">
-        <Hero3DCanvas labSettings={labSettings} mousePosition={mousePos} />
+        <Hero3DCanvas mousePosition={mousePos} />
         <div className="absolute inset-0 bg-gradient-to-b from-[#0b0f19]/40 via-[#0b0f19]/75 to-[#0b0f19]" />
       </div>
 

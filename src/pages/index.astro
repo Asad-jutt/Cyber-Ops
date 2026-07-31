@@ -1,8 +1,11 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import App from '../App';
+import { getSanityPageData } from '../sanity/client';
+
+const initialPageData = await getSanityPageData('home');
 ---
 
 <Layout title="Cyber Ops // Enterprise Cybersecurity Consulting">
-  <App client:only="react" />
+  <App client:only="react" initialPageData={initialPageData} />
 </Layout>
